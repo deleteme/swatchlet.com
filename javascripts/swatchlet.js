@@ -1,18 +1,69 @@
+var Content = {
+
+  setup: function(){
+    this.content = $('content').setStyle({ opacity: .8 });
+    this.hidden = true;
+    this.close = $('close').observe('click', this.closeContent.bind(this));
+    
+    document.observe('link:clicked', function(e){
+      if (e.element().match('a[href=#about]')) {
+        this.showAbout();
+        e.target.blur();
+        e.stop();
+      }
+    }.bind(this));
+  },
+
+  closeContent: function(e){
+    if (!this._hidden) {
+      this.content.fade({
+        duration: .3,
+        afterFinish: function(){ this.hidden = true; }.bind(this)
+      });
+    }
+    if (e) e.stop();
+  },
+  
+  showAbout: function(){
+    if (!this.hidden) return;
+    this.content
+      .setStyle({ opacity: 0 })
+      .show()
+      .morph({ opacity: '.8' }, {
+        duration: .3,
+        afterFinish: function(){ this.hidden = false; }.bind(this)
+      });
+  }
+  
+};
+
+var Links = {
+  
+  setup: function(){
+    
+    this.links = $('links');
+    
+    this.links.observe('click', function(e){
+      if (e.element().readAttribute('href').include('#'))
+        e.element().fire('link:clicked', { href: e.element().readAttribute('href') });
+        e.element().blur();
+        e.stop();
+    });
+    
+  }
+};
+
 var Swatchlet = Class.create({
+  
   initialize: function(){
     document.observe('dom:loaded', this.setup.bind(this));
   },
+  
   setup: function(){
     this.domain = '';// 'http://swatchlet.com/';
     this.stage = $('stage');
     this.colors = $A();
-    this.o = .8;
-    this.d = .3;
-    this.content = $('content').setStyle({ opacity: this.o }).hide();
-    this.content._hidden = true;
-    this.close = $('close').setStyle({ opacity: this.o });
-    this.links = $('links');
-    this.toplinks = $('toplinks');
+    
     this.color = new Template(
       ['<div class="color" style="background-color: #{bgColor}; width: #{width}">',
         '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
@@ -21,9 +72,28 @@ var Swatchlet = Class.create({
     );
     this.startBgColor = '#ffffff';
     this.URL = String(window.location);
+    
+    this.links = Links;
+    this.links.setup();
+    // cl(this.links);
+    
+    this.content = Content;
+    this.content.setup();
+    // cl(this.content);
+    
+    document.observe('link:clicked', function(e){
+      if (e.target.match('a[href=#add]')){
+        this.addNewColor();
+        this.content.closeContent();
+        e.target.blur();
+        e.stop();
+      }
+    }.bind(this));
+    
+    
     this.parseURL();
-    this.behavior();
   },
+  
   parseURL: function(){
     var u = this.URL;
     // if (!u.include('#') || u.endsWith('#')) return;
@@ -43,11 +113,13 @@ var Swatchlet = Class.create({
     }
     this.observeStage();
   },
+  
   prependOctothorpe: function(){
     this.colors.map(function(c, i){
       this.colors[i] = '#' + c;
     }.bind(this));
   },
+  
   addColorsToStage: function(){
     this.colors.each(function(color, i){
       var width = (1/this.colors.length * 100) + '%';
@@ -59,47 +131,8 @@ var Swatchlet = Class.create({
       );
     }.bind(this));
   },
-  behavior: function(){
-    this.close.observe('click', this.closeContent.bind(this));
-    
-    this.links.observe('click', function(e){
-      if (e.target.match('a[href=#add]')){
-        this.addNewColor();
-        this.closeContent();
-        e.target.blur();
-        e.stop();
-      }
-    }.bind(this));
-    
-    this.toplinks.observe('click', function(e){
-      if (this.content._hidden) {
-        this.content
-          .setStyle({ opacity: 0 })
-          .show()
-          .morph({ opacity: new String(this.o) }, { duration: this.d,
-            afterFinish: function(){
-              this.content._hidden = false;
-            }.bind(this)
-          });
-      }
-      e.target.blur();
-      e.stop();
-    }.bind(this));
-    
-    Event.observe(window, 'unload', function(){});
-  },
-  closeContent: function(e){
-    if (!this.content._hidden) {
-      this.content.fade({ duration: this.d,
-        afterFinish: function(){
-          this.content._hidden = true;
-        }.bind(this)
-      });
-    }
-    if (e) e.stop();
-  },
+  
   addNewColor: function(){
-    cl(this.colors);
     this.stage.insert(
       this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
     );
@@ -111,11 +144,12 @@ var Swatchlet = Class.create({
     this.resetWidths();
     this.refresh();
   },
+  
   observeStage: function(){
     this.stage
       .observe('click', function(e){
         if (e.target.match('a[href=#Remove]')){
-          this.removeColorLink(e);
+          this.removeColorLink(e, $$('a[href=#Remove]').indexOf(e.target));
         }
         if (e.target.match('input')){
           e.target.select();
@@ -131,12 +165,14 @@ var Swatchlet = Class.create({
       }
     }.bind(this));
   },
-  removeColorLink: function(e){
+  
+  removeColorLink: function(e, i){
     e.target.up('.color').fade({
+      duration: .3,
       beforeStart: function(){
-        var excludeMe = e.target.up('.color');
-        this.colors = this.colors.without(excludeMe.down('input').value);
-        this.setColorDivs(excludeMe);
+        this.colors[i] = null;
+        this.colors = this.colors.compact();
+        this.setColorDivs(e.target.up('.color'));
       }.bind(this),
       afterFinish: function(){
         e.target.up('.color').remove();
@@ -148,37 +184,43 @@ var Swatchlet = Class.create({
     e.target.blur();
     e.stop();
   },
+  
   updateColorArray: function(){
     this.colors = $$('.color').collect(function(c){
       return c.down('input').value;
     }.bind(this));
   },
+  
   resetWidths: function(){
     this.colorDivs.each(function(c, i){
-      var width = (1/this.colors.length * 100) + '%';
+      if (this.colors.length == 1) {
+        var width = '100%';
+      } else {
+        var width = (1/this.colors.length * 100) + '%';
+      }
       c.setStyle({ width: width });
     }.bind(this));
   },
+  
   setColorDivs: function(excludeMe){
     this.colorDivs = $$('.color');
     if (excludeMe) {
       this.colorDivs = this.colorDivs.without(excludeMe);
     }
   },
+  
   refresh: function(){
     window.location = this.domain + '#' + this.colors.collect(function(s) {
       return s.gsub('#', '');
     }).join(',');
   }
+  
 });
 
 function stripColors (str) {
   var s = new String(str);
   s = s.substr(s.indexOf('#') + 1, s.length);
-  cl(s);
-  cl(str);
   if (str != s){
-    cl(s);
     return s;
   }
 }
@@ -191,3 +233,11 @@ if(window['console'] === undefined)
   window.console = { log: Prototype.emptyFunction };
 
 new Swatchlet();
+
+Event.observe(window, 'unload', Prototype.emptyFunction);
+
+function fireWindowLoaded(){
+  document.fire('window:loaded');
+};
+
+Event.observe(window, 'load', function(){ fireWindowLoaded.defer(); });
