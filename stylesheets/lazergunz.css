@@ -1,0 +1,198 @@
+/*
+
+Layout
+*/
+html, body {
+  background: #000;
+  color: #ccc;
+  font-family: Helvetica, Arial, sans-serif;
+  line-height: 1.25em;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+}
+    
+  #head {
+    background: #000;
+    height: 100px;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
+  }
+    
+    #head h1 {
+      font-size: 18px;
+      font-weight: normal;
+      left: 50px;
+      line-height: 100px;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+    }
+      
+      #head h1 strong {
+        color: #fff;
+      }
+      
+    #head ul#links {
+      line-height: 100px;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      right: 50px;
+    }
+
+      #head ul#links li {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+
+        #head ul#links li a {
+          padding: 5px;
+          text-decoration: none;
+        }
+    
+    #head ul#toplinks {
+      font-size: 12px;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      right: 50px;
+      top: 5px;
+    }
+      
+      #head ul#toplinks li {
+        display: inline;
+        list-style: none;
+      }
+      
+        #head ul#toplinks li a {
+          padding: 5px;
+          text-decoration: none;
+        }
+
+  #stage {
+    background: #333;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    z-index: 1;
+  }
+
+    .color {
+      height: 100%;
+      float: left;
+      position: relative;
+      text-align: center;
+      z-index: 3;
+    }
+      
+      .color:hover input {
+        background: #fff;
+        border: 2px solid #000;
+        border-left: 0;
+        border-right: 0;
+      }
+      
+      .color input {
+        background: transparent;
+        border: 2px solid transparent;
+        border-left: 0;
+        border-right: 0;
+        color: #000;
+        cursor: pointer;
+        display: inline;
+        font-size: 16px;
+        font-family: monospace;
+        margin: 0;
+        padding: 10px 0;
+        position: relative;
+        text-align: center;
+        top: 120px;
+        width: 100%;
+        z-index: 4;
+      }
+
+      .color input:hover, .color input:focus {
+        background: #000;
+        border: 2px solid #fff;
+        border-left: 0;
+        border-right: 0;
+        color: #fff;
+      }
+      
+      .color a[href='#Remove'] {
+        background: black;
+        bottom: 10px;
+        color: #fff;
+        display: none;
+        font-size: 12px;
+        left: 50%;
+        margin: 0 0 0 -45px;
+        padding: 2px;
+        position: absolute;
+        text-decoration: none;
+        text-align: center;
+        width: 90px;
+        z-index: 4;
+      }
+      
+      .color:hover a[href='#Remove'] {
+        display: block;
+      }
+      
+      .color a[href='#Remove']:hover {
+        background: #fff;
+        color: #000;
+      }
+      
+    
+  #content {
+    background: #000;
+    color: #999;
+    left: 22%;
+    margin: auto;
+    position: absolute;
+    top: 200px;
+    width: 58%;
+    z-index: 3;
+  }
+    
+    .margin {
+      margin: 20px;
+    }
+  
+    a#close {
+      position: absolute;
+      right: 5px;
+      text-decoration: none;
+      top: 5px;
+    }
+
+/*
+
+Type
+*/
+  
+  a, #content a {
+    color: #fff;
+  }
+
+    a:hover, #content a:hover {
+      background: #fff;
+      color: #000;
+    }
+  
+  #content strong {
+    color: #fff;
+  }
+
+  #content h1, #content h2, #content h3, #content h4, #content h5 {
+    color: #fff;
+    margin-top: 1.5em;
+  }
+  
+  #content li {
+    margin-top: .5em;
+  }
