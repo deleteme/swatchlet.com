@@ -1,7 +1,7 @@
 var Content = {
 
   setup: function(){
-    this.content = $('content').setStyle({ opacity: .8 });
+    this.content = $('content');
     this.hidden = true;
     this.close = $('close').observe('click', this.closeContent.bind(this));
     
@@ -26,13 +26,10 @@ var Content = {
   
   showAbout: function(){
     if (!this.hidden) return;
-    this.content
-      .setStyle({ opacity: 0 })
-      .show()
-      .morph({ opacity: '.8' }, {
-        duration: .3,
-        afterFinish: function(){ this.hidden = false; }.bind(this)
-      });
+    this.content.appear({
+      duration: .3,
+      afterFinish: function(){ this.hidden = false; }.bind(this)
+    });
   }
   
 };
@@ -66,7 +63,7 @@ var Swatchlet = Class.create({
     this.colors = $A();
     
     this.color = new Template(
-      ['<div class="color" style="background-color: #{bgColor}; width: #{width}">',
+      ['<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
         '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
         '<ul>',
           '<li><a href="#Color">c</a></li>',
@@ -134,12 +131,18 @@ var Swatchlet = Class.create({
         })
       );
     }.bind(this));
+    
+    // animate in
+    $$('.color').each(function(c, i){
+      c.appear({ delay: i/5 });
+    });
   },
   
   addNewColor: function(){
     this.stage.insert(
       this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
     );
+    $$('.color').last().appear({ queue: 'end' });
     if (this.colors.first() != '')
       this.colors.push(this.startBgColor);
     else if (this.colors.first() == '')
@@ -197,11 +200,7 @@ var Swatchlet = Class.create({
   
   resetWidths: function(){
     this.colorDivs.each(function(c, i){
-      if (this.colors.length == 1) {
-        var width = '100%';
-      } else {
-        var width = (1/this.colors.length * 100) + '%';
-      }
+      var width = (this.colors.length == 1) ? '100%' : (1/this.colors.length * 100) + '%';
       c.setStyle({ width: width });
     }.bind(this));
   },
