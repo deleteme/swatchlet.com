@@ -44,10 +44,11 @@ var Links = {
     this.links = $('links');
     
     this.links.observe('click', function(e){
-      if (e.element().readAttribute('href').include('#'))
+      if (e.element().readAttribute('href').include('#')) {
         e.element().fire('link:clicked', { href: e.element().readAttribute('href') });
         e.element().blur();
         e.stop();
+      }
     });
     
   }
@@ -67,7 +68,10 @@ var Swatchlet = Class.create({
     this.color = new Template(
       ['<div class="color" style="background-color: #{bgColor}; width: #{width}">',
         '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
-        '<a href="#Remove">Remove</a>',
+        '<ul>',
+          '<li><a href="#Color">c</a></li>',
+          '<li><a href="#Remove">x</a></li>',
+        '</ul>',
       '</div>'].join('')
     );
     this.startBgColor = '#ffffff';
