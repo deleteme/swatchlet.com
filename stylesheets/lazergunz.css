@@ -201,3 +201,26 @@ Type
   #content li {
     margin-top: .5em;
   }
+
+/*
+
+Color Picker
+*/
+#colorpicker {
+  background: rgba(0, 0, 0, .9);
+  border: 1px solid #000;
+  font-size: 10px;
+  padding: 5px;
+  position: absolute;
+  right: 0px;
+  top: 40px;
+  width: 450px;
+  z-index: 1;
+  -moz-border-radius: 0 0 5px 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+}
+  
+  img[src$='mappoint.gif'], img[src$='rangearrows.gif'] {
+    z-index: 2;
+  }

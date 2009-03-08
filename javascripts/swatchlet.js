@@ -244,3 +244,8 @@ function fireWindowLoaded(){
 };
 
 Event.observe(window, 'load', function(){ fireWindowLoaded.defer(); });
+
+
+document.observe('window:loaded',function() {
+  cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'ff0000', startMode:'s' });
+});
