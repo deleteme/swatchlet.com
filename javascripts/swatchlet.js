@@ -56,7 +56,7 @@ var Links = {
 var ColorPicker = {
   
   setup: function(){
-    this.cp = $('colorpicker');
+    this.cp = $('colorpicker').setStyle('height:0px;top:0;opacity:0;overflow:hidden;');
     document.observe('window:loaded', function() {
       this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'f2f2f2', startMode:'h' });
       this.cp1.hide();
@@ -89,7 +89,7 @@ var ColorPicker = {
   },
   
   show: function(){
-    this.cp.appear({
+    this.cp.setStyle('height:auto;top:40px;').appear({
       duration: .2,
       afterFinish: function(){
         this.cp1.show();
@@ -111,7 +111,7 @@ var Color = Class.create({
     this.hasColorPicker = false;
     this.html = new Template([
       '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
-        '<strong class="#{lightOrDark}">#{bgColor}</strong>',
+        '<strong>#{bgColor}</strong>',
         '<input type="text" value="#{bgColor}" />',
         '<ul>',
           '<li><a href="#Remove" title="Remove">x</a></li>',
@@ -126,7 +126,6 @@ var Color = Class.create({
     $('stage').insert(
       this.html.evaluate({
         bgColor: this.hex,
-        lightOrDark: this.calculateBackgroundValue(),
         width: '0px'
       })
     );
@@ -164,10 +163,6 @@ var Color = Class.create({
       var width = (colors.length == 1) ? '100%' : (1/colors.length * 100) + '%';
       c.morph({ width: width }, { duration: .5 });
     });
-  },
-  
-  calculateBackgroundValue: function(){
-    return 'onLightBackground';
   }
   
 });

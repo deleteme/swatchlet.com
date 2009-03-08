@@ -147,7 +147,7 @@ Refresh.Web.ColorMethods = {
 		return(parseInt(hex,16));
 	},
 	rgbToHsv: function (rgb) {
-
+    console.log(rgb);
 		var r = rgb.r / 255;
 		var g = rgb.g / 255;
 		var b = rgb.b / 255;

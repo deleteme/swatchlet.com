@@ -57,7 +57,7 @@ html, body {
         }
 
   #stage {
-    background: #333;
+    background: #111;
     height: 100%;
     overflow: hidden;
     position: absolute;
@@ -74,21 +74,18 @@ html, body {
     }
     
       .color strong {
+        background: rgba(255, 255, 255, .6);
+        font-size: 13px;
         right: 10px;
         position: absolute;
         text-transform: uppercase;
+        color: #000;
+        text-shadow: 0 0 3px #fff;
+        padding: 0 5px;
         top: 75px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
       }
-        
-        .color strong.onLightBackground {
-          color: #000;
-          text-shadow: 0 0 3px #fff;
-        }
-        
-        .color strong.onDarkBackground {
-          color: #fff;
-          text-shadow: 0 0 3px #000;
-        }
       
       .color input {
         display: none;
