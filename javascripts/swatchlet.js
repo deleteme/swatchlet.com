@@ -17,7 +17,7 @@ var Content = {
   closeContent: function(e){
     if (!this._hidden) {
       this.content.morph({
-        opacity: '0', width: '0%'
+        opacity: '0'
       },{
         duration: .3,
         afterFinish: function(){ this.hidden = true; }.bind(this)
