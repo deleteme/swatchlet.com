@@ -16,7 +16,9 @@ var Content = {
 
   closeContent: function(e){
     if (!this._hidden) {
-      this.content.fade({
+      this.content.morph({
+        opacity: '0', width: '0%'
+      },{
         duration: .3,
         afterFinish: function(){ this.hidden = true; }.bind(this)
       });
@@ -34,10 +36,10 @@ var Content = {
   
 };
 
+
 var Links = {
   
   setup: function(){
-    
     this.links = $('links');
     
     this.links.observe('click', function(e){
@@ -47,9 +49,129 @@ var Links = {
         e.stop();
       }
     });
-    
   }
 };
+
+
+var ColorPicker = {
+  
+  setup: function(){
+    this.cp = $('colorpicker');
+    document.observe('window:loaded', function() {
+      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'f2f2f2', startMode:'h' });
+      this.cp1.hide();
+      // this.cp.hide();
+    }.bind(this));
+    
+    this.cancelButton = $('cp_cancel');
+    this.okButton = $('cp_ok');
+    
+    
+    // wiring the buttons
+    this.cancelButton.observe('click', function(e){
+      this.close();
+      this.cancelButton.blur();
+      e.stop();
+    }.bind(this));
+    
+    this.okButton.observe('click', function(e){
+      document.fire('color:picked', { hex: this.cp1._cvp.color.hex });
+      this.close();
+      e.stop();
+    }.bind(this));
+    
+    // document.observe('color:picked', this.update.bind(this));
+  },
+  
+  close: function(){
+    this.cp1.hide();
+    this.cp.hide();
+  },
+  
+  show: function(){
+    this.cp.appear({
+      duration: .2,
+      afterFinish: function(){
+        this.cp1.show();
+      }.bind(this)
+    });
+  },
+  
+  update: function(e){
+    console.log('updated', e);
+  }
+  
+};
+
+var Color = Class.create({
+  
+  initialize: function(hex, index){
+    this.hex = '#' + hex.gsub('#', '');
+    this.index = index;
+    this.hasColorPicker = false;
+    this.html = new Template([
+      '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
+        '<strong class="#{lightOrDark}">#{bgColor}</strong>',
+        '<input type="text" value="#{bgColor}" style="display: none;" />',
+        '<ul>',
+          '<li><a href="#Remove" title="Remove">x</a></li>',
+          '<li><a href="#Edit">edit</a></li>',
+        '</ul>',
+      '</div>'
+    ].join(''));
+    this.add();
+  },
+  
+  add: function(){
+    $('stage').insert(
+      this.html.evaluate({
+        bgColor: this.hex,
+        lightOrDark: this.calculateBackgroundValue(),
+        width: '0px'
+      })
+    );
+    this.acquireElements();
+    this.updateWidthsOfColors();
+    this.element.appear({ duration: .3, queue: 'end' }); // appear effect should try to be merged in with the morph method
+    document.fire('color:added', { hex: this.hex });
+  },
+  
+  acquireElements: function(){
+    this.element = $$('.color').last();
+    this.input = this.element.down('input');
+    this.strong = this.element.down('strong');
+  },
+  
+  remove: function(){
+    this.element.fade({ duration: .25, afterFinish: function(){
+      this.element.remove();
+      document.fire('color:removed', { hex: this.hex });
+      this.updateWidthsOfColors();
+    }.bind(this)});
+  },
+  
+  update: function(color){
+    this.hex = '#' + color;
+    this.element.morph({ background: this.hex }, { duration: .3 });
+    this.input.value = this.hex;
+    this.strong.update(this.hex);
+  },
+  
+  updateWidthsOfColors: function(){
+    // TODO: use an internal object, not a DOM element
+    var colors = $$('.color');
+    colors.each(function(c, i){
+      var width = (colors.length == 1) ? '100%' : (1/colors.length * 100) + '%';
+      c.morph({ width: width }, { duration: .5 });
+    });
+  },
+  
+  calculateBackgroundValue: function(){
+    return 'onLightBackground';
+  }
+  
+});
+
 
 var Swatchlet = Class.create({
   
@@ -60,27 +182,28 @@ var Swatchlet = Class.create({
   setup: function(){
     this.domain = '';// 'http://swatchlet.com/';
     this.stage = $('stage');
-    this.colors = $A();
+    this.colors = [];
     
-    this.color = new Template(
-      ['<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
-        '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
-        '<ul>',
-          '<li><a href="#Color">c</a></li>',
-          '<li><a href="#Remove">x</a></li>',
-        '</ul>',
-      '</div>'].join('')
-    );
-    this.startBgColor = '#ffffff';
+    // this.color = new Template(
+    //   ['<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
+    //     '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
+    //     '<ul>',
+    //       '<li><a href="#Color">c</a></li>',
+    //       '<li><a href="#Remove" title="Remove">x</a></li>',
+    //     '</ul>',
+    //   '</div>'].join('')
+    // );
+    this.startBgColor = '#f2f2f2';
     this.URL = String(window.location);
     
     this.links = Links;
     this.links.setup();
-    // cl(this.links);
     
     this.content = Content;
     this.content.setup();
-    // cl(this.content);
+    
+    this.colorpicker = ColorPicker;
+    this.colorpicker.setup();
     
     document.observe('link:clicked', function(e){
       if (e.target.match('a[href=#add]')){
@@ -91,11 +214,21 @@ var Swatchlet = Class.create({
       }
     }.bind(this));
     
+    document.observe('color:picked', function(e){
+      this.colors.find(function(color){
+        if (color.hasColorPicker){
+          color.hasColorPicker = false;
+          return true;
+        }
+      }).update(e.memo.hex);
+      this.updateURL();
+    }.bind(this));
     
-    this.parseURL();
+    this.addColorsBasedOnURL();
+    this.observeStage();
   },
   
-  parseURL: function(){
+  addColorsBasedOnURL: function(){
     var u = this.URL;
     // if (!u.include('#') || u.endsWith('#')) return;
     if (u.include('%2C')) {
@@ -103,23 +236,35 @@ var Swatchlet = Class.create({
       this.URL = String(window.location);
       var u = this.URL;
     }
-    if (!u.include(',')) {
-      this.colors.push(stripColors(this.URL) || '');
-    } else {
-      this.colors = stripColors(this.URL).split(',');
+    if (stripColors(this.URL)) {
+      if (!u.include(',')) {
+        // this.colors.push(stripColors(this.URL) || '');
+        this.colors.push(new Color(stripColors(this.URL)) || '');
+      } else {
+        // this.colors = stripColors(this.URL).split(',');
+        this.colors = stripColors(this.URL).split(',').map(function(c){
+          return new Color(c);
+        });
+      }
     }
-    if (u.include('#') && !u.endsWith('#')) {
-      this.prependOctothorpe();
-      this.addColorsToStage();
-    }
-    this.observeStage();
+    // if (u.include('#') && !u.endsWith('#')) {
+    //   this.prependOctothorpe();
+    //   // this.addColorsToStage();
+    // }
+    console.log(this.colors);
   },
   
+/*
   prependOctothorpe: function(){
-    this.colors.map(function(c, i){
-      this.colors[i] = '#' + c;
-    }.bind(this));
+    // this.colors.map(function(c, i){
+    //   this.colors[i] = '#' + c;
+    // }.bind(this));
+    this.colors.each(function(color, i){
+      color.hex = '#' + color.hex;
+    });
   },
+*/
+/*
   
   addColorsToStage: function(){
     this.colors.each(function(color, i){
@@ -138,56 +283,79 @@ var Swatchlet = Class.create({
     });
   },
   
+*/
   addNewColor: function(){
-    this.stage.insert(
-      this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
-    );
-    $$('.color').last().appear({ queue: 'end' });
-    if (this.colors.first() != '')
-      this.colors.push(this.startBgColor);
-    else if (this.colors.first() == '')
-      this.colors[0] = this.startBgColor;
+    this.colors.push(new Color(this.startBgColor));
+    this.colors.last().hasColorPicker = true;
+    // this.stage.insert(
+    //   this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
+    // );
+    // $$('.color').last().appear({ queue: 'end' });
+    // if (this.colors.first() != '')
+    //   this.colors.push(this.startBgColor);
+    // else if (this.colors.first() == '')
+    //   this.colors[0] = this.startBgColor;
     this.setColorDivs();
-    this.resetWidths();
-    this.refresh();
+    // this.resetWidths();
+    this.colorpicker.show(this.colors.length - 1);
+    this.updateURL();
   },
   
   observeStage: function(){
     this.stage
       .observe('click', function(e){
         if (e.target.match('a[href=#Remove]')){
-          this.removeColorLink(e, $$('a[href=#Remove]').indexOf(e.target));
+          this.removeColor(e, $$('a[href=#Remove]').indexOf(e.target));
         }
         if (e.target.match('input')){
           e.target.select();
         }
+        if (e.target.match('a[href=#Edit]')){
+          this.editColor(e, $$('a[href=#Edit]').indexOf(e.target));
+        }
       }.bind(this))
     .observe('change', function(e){
       if (e.target.match('input')){
-        e.target.up('.color').setStyle({
-          backgroundColor: e.target.value
-        });
-        this.updateColorArray();
-        this.refresh();
+        this.setColor(e.target);
       }
+    }.bind(this));
+    
+    document.observe('color:removed', function(){
+      this.updateURL();
+      this.stage.focus();
     }.bind(this));
   },
   
-  removeColorLink: function(e, i){
-    e.target.up('.color').fade({
-      duration: .3,
-      beforeStart: function(){
-        this.colors[i] = null;
-        this.colors = this.colors.compact();
-        this.setColorDivs(e.target.up('.color'));
-      }.bind(this),
-      afterFinish: function(){
-        e.target.up('.color').remove();
-        this.resetWidths();
-        this.refresh();
-        this.stage.focus();
-      }.bind(this)
-    });
+  removeColor: function(e, i){
+    // this.setColorDivs(e.target.up('.color'));
+    this.colors[i].remove();
+    this.colors = this.colors.without(this.colors[i]);
+    // e.target.up('.color').fade({
+    //   duration: .3,
+    //   beforeStart: function(){
+    //     this.colors[i] = null;
+    //     this.colors = this.colors.compact();
+    //     this.setColorDivs(e.target.up('.color'));
+    //   }.bind(this),
+    //   afterFinish: function(){
+    //     e.target.up('.color').remove();
+    //     this.resetWidths();
+    //     this.updateURL();
+    //     this.stage.focus();
+    //   }.bind(this)
+    // });
+    // e.target.blur();
+    e.stop();
+  },
+  
+  editColor: function(e, i){
+    this.colors[i].hasColorPicker = true;
+    this.colorpicker.show();
+    
+    $('cp1_Hex').value = this.colors[i].hex.gsub('#', '');
+    this.colorpicker.cp1._cvp.setValuesFromHex()
+    this.colorpicker.cp1.textValuesChanged();
+    
     e.target.blur();
     e.stop();
   },
@@ -198,11 +366,20 @@ var Swatchlet = Class.create({
     }.bind(this));
   },
   
-  resetWidths: function(){
-    this.colorDivs.each(function(c, i){
-      var width = (this.colors.length == 1) ? '100%' : (1/this.colors.length * 100) + '%';
-      c.setStyle({ width: width });
-    }.bind(this));
+  // resetWidths: function(){
+  //   this.colorDivs.each(function(c, i){
+  //     var width = (this.colors.length == 1) ? '100%' : (1/this.colors.length * 100) + '%';
+  //     c.setStyle({ width: width });
+  //   }.bind(this));
+  // },
+  
+  setColor: function(input){
+    input.value = e.memo.hex;
+    input.up('.color').setStyle({
+      backgroundColor: input.value
+    });
+    this.updateColorArray();
+    this.updateURL();
   },
   
   setColorDivs: function(excludeMe){
@@ -212,9 +389,9 @@ var Swatchlet = Class.create({
     }
   },
   
-  refresh: function(){
-    window.location = this.domain + '#' + this.colors.collect(function(s) {
-      return s.gsub('#', '');
+  updateURL: function(){
+    window.location = this.domain + '#' + this.colors.map(function(color) {
+      return color.hex.gsub('#', '');
     }).join(',');
   }
   
@@ -230,6 +407,7 @@ function stripColors (str) {
 
 function cl (s) {
   console.log(s);
+  // return s;
 }
 
 if(window['console'] === undefined)
@@ -245,7 +423,3 @@ function fireWindowLoaded(){
 
 Event.observe(window, 'load', function(){ fireWindowLoaded.defer(); });
 
-
-document.observe('window:loaded',function() {
-  cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'ff0000', startMode:'s' });
-});

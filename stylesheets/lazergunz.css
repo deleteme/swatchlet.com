@@ -59,6 +59,7 @@ html, body {
   #stage {
     background: #333;
     height: 100%;
+    overflow: hidden;
     position: absolute;
     width: 100%;
     z-index: 1;
@@ -71,6 +72,23 @@ html, body {
       text-align: center;
       z-index: 3;
     }
+    
+      .color strong {
+        right: 10px;
+        position: absolute;
+        text-transform: uppercase;
+        top: 75px;
+      }
+        
+        .color strong.onLightBackground {
+          color: #000;
+          text-shadow: 0 0 3px #fff;
+        }
+        
+        .color strong.onDarkBackground {
+          color: #fff;
+          text-shadow: 0 0 3px #000;
+        }
       
       .color:hover input {
         background: #fff;
@@ -115,7 +133,7 @@ html, body {
         position: absolute;
         right: 10px;
         top: 50px;
-        width: 50px;
+        width: 150px;
       }
         
         .color ul li {
@@ -126,14 +144,15 @@ html, body {
         
         .color ul li a {
           background: rgba(0, 0, 0, .6);
-          float: left;
+          float: right;
           font-weight: bold;
           height: 20px;
           line-height: 20px;
           margin-left: 5px;
+          padding: 0 7px;
           -moz-border-radius: 3px;
           -webkit-border-radius: 3px;
-          width: 20px;
+/*          width: 20px;*/
           text-decoration: none;
         }
         
@@ -212,9 +231,9 @@ Color Picker
   font-size: 10px;
   padding: 5px;
   position: absolute;
-  right: 0px;
+  right: 0;
   top: 40px;
-  width: 450px;
+  width: 430px;
   z-index: 1;
   -moz-border-radius: 0 0 5px 5px;
   -webkit-border-bottom-left-radius: 5px;

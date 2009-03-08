@@ -135,15 +135,15 @@ Refresh.Web.ColorPicker.prototype = {
 		this.color = null;
 	},
 	show: function() {
-		this._map.Arrow.style.display = '';
-		this._slider.Arrow.style.display = '';
+		this._map._arrow.style.display = '';
+		this._slider._arrow.style.display = '';
 		this._map.setPositioningVariables();
 		this._slider.setPositioningVariables();
 		this.positionMapAndSliderArrows();
 	},
 	hide: function() {
-		this._map.Arrow.style.display = 'none';
-		this._slider.Arrow.style.display = 'none';
+		this._map._arrow.style.display = 'none';
+		this._slider._arrow.style.display = 'none';
 	},
 	_onRadioClicked: function(e) {
 		this.setColorMode(e.target.value);
@@ -495,6 +495,7 @@ Refresh.Web.ColorPicker.prototype = {
 		this.updatePreview();
 		this.updateMapVisuals();
 		this.updateSliderVisuals();
+    // document.fire('color:picked', { hex: '#' + this._cvp.color.hex });
 	},
 	updatePreview: function() {
 		try {
