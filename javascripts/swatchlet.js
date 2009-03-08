@@ -98,7 +98,7 @@ var ColorPicker = {
   },
   
   update: function(e){
-    console.log('updated', e);
+    // console.log('updated', e);
   }
   
 };
@@ -112,7 +112,7 @@ var Color = Class.create({
     this.html = new Template([
       '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
         '<strong class="#{lightOrDark}">#{bgColor}</strong>',
-        '<input type="text" value="#{bgColor}" style="display: none;" />',
+        '<input type="text" value="#{bgColor}" />',
         '<ul>',
           '<li><a href="#Remove" title="Remove">x</a></li>',
           '<li><a href="#Edit">edit</a></li>',
@@ -184,15 +184,6 @@ var Swatchlet = Class.create({
     this.stage = $('stage');
     this.colors = [];
     
-    // this.color = new Template(
-    //   ['<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
-    //     '<input type="text" value="#{bgColor}" title="Copy or Change This Value" />',
-    //     '<ul>',
-    //       '<li><a href="#Color">c</a></li>',
-    //       '<li><a href="#Remove" title="Remove">x</a></li>',
-    //     '</ul>',
-    //   '</div>'].join('')
-    // );
     this.startBgColor = '#f2f2f2';
     this.URL = String(window.location);
     

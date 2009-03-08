@@ -90,38 +90,8 @@ html, body {
           text-shadow: 0 0 3px #000;
         }
       
-      .color:hover input {
-        background: #fff;
-        border: 2px solid #000;
-        border-left: 0;
-        border-right: 0;
-      }
-      
       .color input {
-        background: transparent;
-        border: 2px solid transparent;
-        border-left: 0;
-        border-right: 0;
-        color: #000;
-        cursor: pointer;
-        display: inline;
-        font-size: 16px;
-        font-family: monospace;
-        margin: 0;
-        padding: 10px 0;
-        position: relative;
-        text-align: center;
-        top: 120px;
-        width: 100%;
-        z-index: 4;
-      }
-
-      .color input:hover, .color input:focus {
-        background: #000;
-        border: 2px solid #fff;
-        border-left: 0;
-        border-right: 0;
-        color: #fff;
+        display: none;
       }
       
       .color ul {
