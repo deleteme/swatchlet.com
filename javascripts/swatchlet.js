@@ -1,3 +1,4 @@
+var START_HEX = '#000000';
 var Content = {
 
   setup: function(){
@@ -58,7 +59,7 @@ var ColorPicker = {
   setup: function(){
     this.cp = $('colorpicker').setStyle('height: 0; top: 0; opacity: 0; overflow: hidden;');
     document.observe('window:loaded', function() {
-      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'f2f2f2', startMode:'h' });
+      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: START_HEX, startMode:'h' });
       this.cp1.hide();
     }.bind(this));
     
@@ -87,7 +88,7 @@ var ColorPicker = {
   },
   
   show: function(){
-    this.cp.setStyle('height:auto;top:40px;').appear({
+    this.cp.setStyle('height: auto; top: 40px;').appear({
       duration: .2,
       afterFinish: function(){
         this.cp1.show();
@@ -174,7 +175,7 @@ var Swatchlet = Class.create({
     this.stage = $('stage');
     this.colors = [];
     
-    this.startBgColor = '#f2f2f2';
+    this.startBgColor = START_HEX;
     this.URL = String(window.location);
     
     this.links = Links;
@@ -266,7 +267,7 @@ var Swatchlet = Class.create({
   
 */
   addNewColor: function(){
-    this.colors.push(new Color(this.startBgColor));
+    this.colors.push(new Color(this.startBgColor, this.colors.length - 1));
     this.colors.last().hasColorPicker = true;
     // this.stage.insert(
     //   this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
@@ -278,8 +279,9 @@ var Swatchlet = Class.create({
     //   this.colors[0] = this.startBgColor;
     // this.setColorDivs();
     // this.resetWidths();
-    this.colorpicker.show(this.colors.length - 1);
+    this.colorpicker.show();
     this.updateURL();
+    this.makeSortable();
   },
   
   observeStage: function(){
