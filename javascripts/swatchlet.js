@@ -400,7 +400,6 @@ var Swatchlet = Class.create({
   },
   
   makeSortable: function(){
-    // this.unregisterMoveHandleObservers();
     this.registerMoveHandleObservers();
     Sortable.create(this.stage, {
       tag: 'div',
