@@ -128,9 +128,11 @@ html, body {
 /*          width: 20px;*/
           text-decoration: none;
         }
-        
-          .color a[href='#Remove'] {
           
+          
+        
+          .color a[href='#Move'] {
+            cursor: move;
           }
       
       .color:hover ul {

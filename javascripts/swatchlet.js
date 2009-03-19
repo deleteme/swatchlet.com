@@ -116,6 +116,7 @@ var Color = Class.create({
         '<ul>',
           '<li><a href="#Remove" title="Remove">x</a></li>',
           '<li><a href="#Edit">edit</a></li>',
+          '<li><a href="#Move">move</a></li>',
         '</ul>',
       '</div>'
     ].join(''));
@@ -206,6 +207,7 @@ var Swatchlet = Class.create({
     }.bind(this));
     
     this.addColorsBasedOnURL();
+    this.makeSortable();
     this.observeStage();
   },
   
@@ -232,7 +234,6 @@ var Swatchlet = Class.create({
     //   this.prependOctothorpe();
     //   // this.addColorsToStage();
     // }
-    console.log(this.colors);
   },
   
 /*
@@ -300,6 +301,11 @@ var Swatchlet = Class.create({
         this.setColor(e.target);
       }
     }.bind(this));
+    // .observe('mousedown', function(e){
+    //   if (e.target.match('a[href=#Move]')){
+    //     console.log('drag me!');
+    //   }
+    // }.bind(this));
     
     document.observe('color:removed', function(){
       this.updateURL();
@@ -374,6 +380,14 @@ var Swatchlet = Class.create({
     window.location = this.domain + '#' + this.colors.map(function(color) {
       return color.hex.gsub('#', '');
     }).join(',');
+  },
+  
+  makeSortable: function(){
+    Sortable.create(this.stage, {
+      tag: 'div',
+      overlap: 'horizontal',
+      constraint: 'horizontal'
+    });
   }
   
 });
