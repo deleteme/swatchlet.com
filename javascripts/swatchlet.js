@@ -303,11 +303,6 @@ var Swatchlet = Class.create({
     //     this.setColor(e.target);
     //   }
     // }.bind(this));
-    // .observe('mousedown', function(e){
-    //   if (e.target.match('a[href=#Move]')){
-    //     console.log('drag me!');
-    //   }
-    // }.bind(this));
     
     document.observe('color:removed', function(){
       this.updateURL();
