@@ -106,6 +106,7 @@ var Color = Class.create({
   initialize: function(hex, index){
     this.hex = '#' + hex.gsub('#', '');
     this.index = index;
+    console.log(this.index);
     this.hasColorPicker = false;
     this.html = new Template([
       '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
@@ -220,11 +221,11 @@ var Swatchlet = Class.create({
     if (stripColors(this.URL)) {
       if (!u.include(',')) {
         // this.colors.push(stripColors(this.URL) || '');
-        this.colors.push(new Color(stripColors(this.URL)) || '');
+        this.colors.push(new Color(stripColors(this.URL), 0) || '');
       } else {
         // this.colors = stripColors(this.URL).split(',');
-        this.colors = stripColors(this.URL).split(',').map(function(c){
-          return new Color(c);
+        this.colors = stripColors(this.URL).split(',').map(function(c, i){
+          return new Color(c, i);
         });
       }
     }
@@ -275,7 +276,7 @@ var Swatchlet = Class.create({
     //   this.colors.push(this.startBgColor);
     // else if (this.colors.first() == '')
     //   this.colors[0] = this.startBgColor;
-    this.setColorDivs();
+    // this.setColorDivs();
     // this.resetWidths();
     this.colorpicker.show(this.colors.length - 1);
     this.updateURL();
@@ -293,12 +294,15 @@ var Swatchlet = Class.create({
         if (e.target.match('a[href=#Edit]')){
           this.editColor(e, $$('a[href=#Edit]').indexOf(e.target));
         }
-      }.bind(this))
-    .observe('change', function(e){
-      if (e.target.match('input')){
-        this.setColor(e.target);
-      }
-    }.bind(this));
+        if (e.target.match('a.move')){
+          e.stop();
+        }
+      }.bind(this));
+    // .observe('change', function(e){
+    //   if (e.target.match('input')){
+    //     this.setColor(e.target);
+    //   }
+    // }.bind(this));
     // .observe('mousedown', function(e){
     //   if (e.target.match('a[href=#Move]')){
     //     console.log('drag me!');
@@ -345,10 +349,26 @@ var Swatchlet = Class.create({
     e.stop();
   },
   
-  updateColorArray: function(){
-    this.colors = $$('.color').collect(function(c){
-      return c.down('input').value;
-    }.bind(this));
+  // updateColorArray: function(){
+  //   this.colors = $$('.color').collect(function(c){
+  //     return c.down('input').value;
+  //   }.bind(this));
+  // },
+  
+  updateOrderOfColors: function(){
+    console.log('updateOrderOfColors');
+    var colorDivs = $$('.color').map(function(c, i){
+      return { element: c, index: i };
+    });
+    
+    this.colors = this.colors.sortBy(function(color){
+      return colorDivs.find(function(c, i){
+        return (c.element == color.element);
+      }).index;
+    });
+    
+    this.updateURL();
+    
   },
   
   // resetWidths: function(){
@@ -358,21 +378,21 @@ var Swatchlet = Class.create({
   //   }.bind(this));
   // },
   
-  setColor: function(input){
-    input.value = e.memo.hex;
-    input.up('.color').setStyle({
-      backgroundColor: input.value
-    });
-    this.updateColorArray();
-    this.updateURL();
-  },
+  // setColor: function(input){
+  //   input.value = e.memo.hex;
+  //   input.up('.color').setStyle({
+  //     backgroundColor: input.value
+  //   });
+  //   this.updateColorArray();
+  //   this.updateURL();
+  // },
   
-  setColorDivs: function(excludeMe){
-    this.colorDivs = $$('.color');
-    if (excludeMe) {
-      this.colorDivs = this.colorDivs.without(excludeMe);
-    }
-  },
+  // setColorDivs: function(excludeMe){
+  //   this.colorDivs = $$('.color');
+  //   if (excludeMe) {
+  //     this.colorDivs = this.colorDivs.without(excludeMe);
+  //   }
+  // },
   
   updateURL: function(){
     window.location = this.domain + '#' + this.colors.map(function(color) {
@@ -385,7 +405,8 @@ var Swatchlet = Class.create({
       tag: 'div',
       handle: 'move',
       overlap: 'horizontal',
-      constraint: 'horizontal'
+      constraint: 'horizontal',
+      onChange: this.updateOrderOfColors.bind(this)
     });
   }
   
