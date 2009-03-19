@@ -390,9 +390,7 @@ var Swatchlet = Class.create({
   // },
   
   updateURL: function(){
-    window.location = this.domain + '#' + this.colors.map(function(color) {
-      return color.hex.gsub('#', '');
-    }).join(',');
+    window.location = this.domain + '#' + this.colors.pluck('hex').invoke('gsub', '#', '').join(',');
   },
   
   makeSortable: function(){
