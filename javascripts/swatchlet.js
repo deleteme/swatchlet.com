@@ -21,6 +21,7 @@ var Content = {
         opacity: '0'
       },{
         duration: .3,
+        beforeStart: function(){ this.content.setStyle('visibility: hidden'); }.bind(this),
         afterFinish: function(){ this.hidden = true; }.bind(this)
       });
     }
@@ -31,6 +32,7 @@ var Content = {
     if (!this.hidden) return;
     this.content.appear({
       duration: .3,
+      beforeStart: function(){ this.content.setStyle('visibility: visible'); }.bind(this),
       afterFinish: function(){ this.hidden = false; }.bind(this)
     });
   }
@@ -89,7 +91,7 @@ var ColorPicker = {
   },
   
   show: function(){
-    this.cp.setStyle('height: auto; top: 40px;').appear({
+    this.cp.setStyle('height: auto; top: 30px;').appear({
       duration: .2,
       afterFinish: function(){
         this.cp1.show();
