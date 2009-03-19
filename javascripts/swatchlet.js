@@ -79,6 +79,8 @@ var ColorPicker = {
       e.stop();
     }.bind(this));
     
+    document.observe('move:mousedown', this.close.bind(this));
+    
     // document.observe('color:picked', this.update.bind(this));
   },
   
@@ -107,7 +109,6 @@ var Color = Class.create({
   initialize: function(hex, index){
     this.hex = '#' + hex.gsub('#', '');
     this.index = index;
-    console.log(this.index);
     this.hasColorPicker = false;
     this.html = new Template([
       '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
@@ -186,6 +187,8 @@ var Swatchlet = Class.create({
     
     this.colorpicker = ColorPicker;
     this.colorpicker.setup();
+    
+    this.moveMouseDown = document.fire.curry('move:mousedown');
     
     document.observe('link:clicked', function(e){
       if (e.target.match('a[href=#add]')){
@@ -283,7 +286,7 @@ var Swatchlet = Class.create({
     this.updateURL();
     this.makeSortable();
   },
-  
+  // unobtrusively monitor the interaction on the stage
   observeStage: function(){
     this.stage
       .observe('click', function(e){
@@ -300,15 +303,17 @@ var Swatchlet = Class.create({
           e.stop();
         }
       }.bind(this));
-    // .observe('change', function(e){
-    //   if (e.target.match('input')){
-    //     this.setColor(e.target);
-    //   }
-    // }.bind(this));
     
     document.observe('color:removed', function(){
       this.updateURL();
       this.stage.focus();
+    }.bind(this));
+  },
+  
+  registerMoveHandleObservers: function(){
+    this.stage.select('a.move').each(function(a){
+      a.stopObserving('mousedown', this.moveMouseDown);
+      a.observe('mousedown', this.moveMouseDown);
     }.bind(this));
   },
   
@@ -353,7 +358,6 @@ var Swatchlet = Class.create({
   // },
   
   updateOrderOfColors: function(){
-    console.log('updateOrderOfColors');
     var colorDivs = $$('.color').map(function(c, i){
       return { element: c, index: i };
     });
@@ -396,6 +400,8 @@ var Swatchlet = Class.create({
   },
   
   makeSortable: function(){
+    // this.unregisterMoveHandleObservers();
+    this.registerMoveHandleObservers();
     Sortable.create(this.stage, {
       tag: 'div',
       handle: 'move',
