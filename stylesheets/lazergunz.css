@@ -125,13 +125,10 @@ html, body {
           padding: 0 7px;
           -moz-border-radius: 3px;
           -webkit-border-radius: 3px;
-/*          width: 20px;*/
           text-decoration: none;
         }
-          
-          
         
-          .color a[href='#Move'] {
+          .color a.move {
             cursor: move;
           }
       
@@ -146,7 +143,7 @@ html, body {
       
     
   #content {
-    background: rgba(0, 0, 0, .7);
+    background: rgba(0, 0, 0, .9);
     color: #777;
     font-size: 13px;
     left: 50%;
