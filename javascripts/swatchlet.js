@@ -123,12 +123,7 @@ var Color = Class.create({
   },
   
   add: function(){
-    $('stage').insert(
-      this.html.evaluate({
-        bgColor: this.hex,
-        width: '0px'
-      })
-    );
+    $('stage').insert(this.html.evaluate({ bgColor: this.hex, width: '0px' }));
     this.acquireElements();
     this.updateWidthsOfColors();
     this.element.appear({ duration: .3, queue: 'end' }); // appear effect should try to be merged in with the morph method
