@@ -56,16 +56,14 @@ var Links = {
 var ColorPicker = {
   
   setup: function(){
-    this.cp = $('colorpicker').setStyle('height:0px;top:0;opacity:0;overflow:hidden;');
+    this.cp = $('colorpicker').setStyle('height: 0; top: 0; opacity: 0; overflow: hidden;');
     document.observe('window:loaded', function() {
       this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: 'f2f2f2', startMode:'h' });
       this.cp1.hide();
-      // this.cp.hide();
     }.bind(this));
     
     this.cancelButton = $('cp_cancel');
     this.okButton = $('cp_ok');
-    
     
     // wiring the buttons
     this.cancelButton.observe('click', function(e){
