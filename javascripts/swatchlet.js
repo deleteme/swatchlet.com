@@ -81,7 +81,6 @@ var ColorPicker = {
     
     document.observe('move:mousedown', this.close.bind(this));
     
-    // document.observe('color:picked', this.update.bind(this));
   },
   
   close: function(){
@@ -216,7 +215,6 @@ var Swatchlet = Class.create({
   
   addColorsBasedOnURL: function(){
     var u = this.URL;
-    // if (!u.include('#') || u.endsWith('#')) return;
     if (u.include('%2C')) {
       window.location = u.gsub('%2C', ',');
       this.URL = String(window.location);
@@ -224,64 +222,19 @@ var Swatchlet = Class.create({
     }
     if (stripColors(this.URL)) {
       if (!u.include(',')) {
-        // this.colors.push(stripColors(this.URL) || '');
         this.colors.push(new Color(stripColors(this.URL), 0) || '');
       } else {
-        // this.colors = stripColors(this.URL).split(',');
         this.colors = stripColors(this.URL).split(',').map(function(c, i){
           return new Color(c, i);
         });
       }
     }
-    // if (u.include('#') && !u.endsWith('#')) {
-    //   this.prependOctothorpe();
-    //   // this.addColorsToStage();
-    // }
   },
   
-/*
-  prependOctothorpe: function(){
-    // this.colors.map(function(c, i){
-    //   this.colors[i] = '#' + c;
-    // }.bind(this));
-    this.colors.each(function(color, i){
-      color.hex = '#' + color.hex;
-    });
-  },
-*/
-/*
-  
-  addColorsToStage: function(){
-    this.colors.each(function(color, i){
-      var width = (1/this.colors.length * 100) + '%';
-      this.stage.insert(
-        this.color.evaluate({
-          bgColor: color,
-          width: width
-        })
-      );
-    }.bind(this));
-    
-    // animate in
-    $$('.color').each(function(c, i){
-      c.appear({ delay: i/5 });
-    });
-  },
-  
-*/
   addNewColor: function(){
     this.colors.push(new Color(this.startBgColor, this.colors.length - 1));
     this.colors.last().hasColorPicker = true;
-    // this.stage.insert(
-    //   this.color.evaluate({ bgColor: this.startBgColor, width: '0px' })
-    // );
-    // $$('.color').last().appear({ queue: 'end' });
-    // if (this.colors.first() != '')
-    //   this.colors.push(this.startBgColor);
-    // else if (this.colors.first() == '')
-    //   this.colors[0] = this.startBgColor;
-    // this.setColorDivs();
-    // this.resetWidths();
+    
     this.colorpicker.show();
     this.updateURL();
     this.makeSortable();
@@ -318,24 +271,9 @@ var Swatchlet = Class.create({
   },
   
   removeColor: function(e, i){
-    // this.setColorDivs(e.target.up('.color'));
     this.colors[i].remove();
     this.colors = this.colors.without(this.colors[i]);
-    // e.target.up('.color').fade({
-    //   duration: .3,
-    //   beforeStart: function(){
-    //     this.colors[i] = null;
-    //     this.colors = this.colors.compact();
-    //     this.setColorDivs(e.target.up('.color'));
-    //   }.bind(this),
-    //   afterFinish: function(){
-    //     e.target.up('.color').remove();
-    //     this.resetWidths();
-    //     this.updateURL();
-    //     this.stage.focus();
-    //   }.bind(this)
-    // });
-    // e.target.blur();
+    
     e.stop();
   },
   
@@ -351,12 +289,6 @@ var Swatchlet = Class.create({
     e.stop();
   },
   
-  // updateColorArray: function(){
-  //   this.colors = $$('.color').collect(function(c){
-  //     return c.down('input').value;
-  //   }.bind(this));
-  // },
-  
   updateOrderOfColors: function(){
     var colorDivs = $$('.color').map(function(c, i){
       return { element: c, index: i };
@@ -371,29 +303,6 @@ var Swatchlet = Class.create({
     this.updateURL();
     
   },
-  
-  // resetWidths: function(){
-  //   this.colorDivs.each(function(c, i){
-  //     var width = (this.colors.length == 1) ? '100%' : (1/this.colors.length * 100) + '%';
-  //     c.setStyle({ width: width });
-  //   }.bind(this));
-  // },
-  
-  // setColor: function(input){
-  //   input.value = e.memo.hex;
-  //   input.up('.color').setStyle({
-  //     backgroundColor: input.value
-  //   });
-  //   this.updateColorArray();
-  //   this.updateURL();
-  // },
-  
-  // setColorDivs: function(excludeMe){
-  //   this.colorDivs = $$('.color');
-  //   if (excludeMe) {
-  //     this.colorDivs = this.colorDivs.without(excludeMe);
-  //   }
-  // },
   
   updateURL: function(){
     window.location = this.domain + '#' + this.colors.pluck('hex').invoke('gsub', '#', '').join(',');
