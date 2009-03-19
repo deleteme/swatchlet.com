@@ -401,11 +401,6 @@ function stripColors (str) {
   }
 }
 
-function cl (s) {
-  console.log(s);
-  // return s;
-}
-
 if(window['console'] === undefined)
   window.console = { log: Prototype.emptyFunction };
 
