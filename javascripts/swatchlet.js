@@ -116,7 +116,7 @@ var Color = Class.create({
         '<ul>',
           '<li><a href="#Remove" title="Remove">x</a></li>',
           '<li><a href="#Edit">edit</a></li>',
-          '<li><a href="#Move">move</a></li>',
+          '<li><a href="#Move" class="move">move</a></li>',
         '</ul>',
       '</div>'
     ].join(''));
@@ -385,6 +385,7 @@ var Swatchlet = Class.create({
   makeSortable: function(){
     Sortable.create(this.stage, {
       tag: 'div',
+      handle: 'move',
       overlap: 'horizontal',
       constraint: 'horizontal'
     });
