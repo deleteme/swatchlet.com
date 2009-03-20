@@ -4,7 +4,7 @@ task :build do
   File.delete('public/javascripts/application.js')
   secretary = Sprockets::Secretary.new(
     :asset_root   => "public",
-    :load_path    => ["vendor/sprockets/*/src", "vendor/prototype/dist", "vendor/scriptaculous/src", "vendor/colorpicker", "vendor/plugins/*/javascripts"],
+    :load_path    => ["constants.yml", "vendor/sprockets/*/src", "vendor/prototype/dist", "vendor/scriptaculous/src", "vendor/colorpicker", "vendor/plugins/*/javascripts"],
     :source_files => ["public/javascripts/document.js", "public/javascripts/**/*.js"]
   )
   

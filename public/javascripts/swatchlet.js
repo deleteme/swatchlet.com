@@ -2,8 +2,6 @@
 //= require "links"
 //= require "colorpicker"
 //= require "color"
-var START_HEX = '#000000';
-
 var Swatchlet = Class.create({
   
   initialize: function(){
@@ -16,7 +14,7 @@ var Swatchlet = Class.create({
     this.stage = $('stage');
     this.colors = [];
     
-    this.startBgColor = START_HEX;
+    this.startBgColor = '<%= START_COLOR %>';
     this.URL = String(window.location);
     
     this.links = Links;

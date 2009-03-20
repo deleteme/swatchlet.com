@@ -3,7 +3,7 @@ var ColorPicker = {
   setup: function(){
     this.cp = $('colorpicker').setStyle('height: 0; top: 0; opacity: 0; overflow: hidden;');
     document.observe('window:loaded', function() {
-      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: START_HEX, startMode:'h' });
+      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: '<%= START_COLOR %>', startMode:'h' });
       this.cp1.hide();
     }.bind(this));
     
