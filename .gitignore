@@ -1,4 +1,4 @@
 .DS_Store
 Thumbs.db
 public/javascripts/application.js
-public/images/colorpicker/*
+public/images/*
