@@ -1,8 +1,10 @@
+require "sprockets"
+
 task :build do
   secretary = Sprockets::Secretary.new(
     :asset_root   => "public",
-    :load_path    => ["vendor/sprockets/*/src", "vendor/prototype", "vendor/scriptaculous", "vendor/plugins/*/javascripts"],
-    :source_files => ["app/javascripts/document.js", "app/javascripts/**/*.js"]
+    :load_path    => ["vendor/sprockets/*/src", "vendor/prototype/dist", "vendor/scriptaculous/src", "vendor/plugins/*/javascripts"],
+    :source_files => ["public/javascripts/document.js", "public/javascripts/**/*.js"]
   )
   
   # Generate a Sprockets::Concatenation object from the source files
