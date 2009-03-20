@@ -1,7 +1,7 @@
 //= require <prototype>
 //= require <effects>
 //= require <dragdrop>
-//= require <ColorPicker>
+//= require <vendor/colorpicker/ColorPicker>
 //= require "swatchlet"
 
 if(window['console'] === undefined)
@@ -11,5 +11,7 @@ new Swatchlet();
 
 Event.observe(window, 'unload', Prototype.emptyFunction);
 
-Event.observe(window, 'load', document.fire.curry('window:loaded'));
+Event.observe(window, 'load', function(){
+  document.fire('window:loaded');
+});
 

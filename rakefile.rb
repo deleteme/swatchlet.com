@@ -1,7 +1,9 @@
 require "sprockets"
 
 task :build do
-  File.delete('public/javascripts/application.js')
+  if File.exists?('public/javascripts/application.js')
+    File.delete('public/javascripts/application.js')
+  end
   secretary = Sprockets::Secretary.new(
     :asset_root   => "public",
     :load_path    => ["constants.yml", "vendor/sprockets/*/src", "vendor/prototype/dist", "vendor/scriptaculous/src", "vendor/colorpicker", "vendor/plugins/*/javascripts"],
