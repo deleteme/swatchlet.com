@@ -1,170 +1,8 @@
+//= require "content"
+//= require "links"
+//= require "colorpicker"
+//= require "color"
 var START_HEX = '#000000';
-var Content = {
-
-  setup: function(){
-    this.content = $('content');
-    this.hidden = true;
-    this.close = $('close').observe('click', this.closeContent.bind(this));
-    
-    document.observe('link:clicked', function(e){
-      if (e.element().match('a[href=#about]')) {
-        this.showAbout();
-        e.target.blur();
-        e.stop();
-      }
-    }.bind(this));
-  },
-
-  closeContent: function(e){
-    if (!this._hidden) {
-      this.content.morph({
-        opacity: '0'
-      },{
-        duration: .3,
-        beforeStart: function(){ this.content.setStyle('visibility: hidden'); }.bind(this),
-        afterFinish: function(){ this.hidden = true; }.bind(this)
-      });
-    }
-    if (e) e.stop();
-  },
-  
-  showAbout: function(){
-    if (!this.hidden) return;
-    this.content.appear({
-      duration: .3,
-      beforeStart: function(){ this.content.setStyle('visibility: visible'); }.bind(this),
-      afterFinish: function(){ this.hidden = false; }.bind(this)
-    });
-  }
-  
-};
-
-
-var Links = {
-  
-  setup: function(){
-    this.links = $('links');
-    
-    this.links.observe('click', function(e){
-      if (e.element().readAttribute('href').include('#')) {
-        e.element().fire('link:clicked', { href: e.element().readAttribute('href') });
-        e.element().blur();
-        e.stop();
-      }
-    });
-  }
-};
-
-
-var ColorPicker = {
-  
-  setup: function(){
-    this.cp = $('colorpicker').setStyle('height: 0; top: 0; opacity: 0; overflow: hidden;');
-    document.observe('window:loaded', function() {
-      this.cp1 = new Refresh.Web.ColorPicker('cp1', { startHex: START_HEX, startMode:'h' });
-      this.cp1.hide();
-    }.bind(this));
-    
-    this.cancelButton = $('cp_cancel');
-    this.okButton = $('cp_ok');
-    
-    // wiring the buttons
-    this.cancelButton.observe('click', function(e){
-      this.close();
-      this.cancelButton.blur();
-      e.stop();
-    }.bind(this));
-    
-    this.okButton.observe('click', function(e){
-      document.fire('color:picked', { hex: this.cp1._cvp.color.hex });
-      this.close();
-      e.stop();
-    }.bind(this));
-    
-    document.observe('move:mousedown', this.close.bind(this));
-    
-  },
-  
-  close: function(){
-    this.cp1.hide();
-    this.cp.hide();
-  },
-  
-  show: function(){
-    this.cp.setStyle('height: auto; top: 30px;').appear({
-      duration: .2,
-      afterFinish: function(){
-        this.cp1.show();
-      }.bind(this)
-    });
-  },
-  
-  update: function(e){
-    // console.log('updated', e);
-  }
-  
-};
-
-var Color = Class.create({
-  
-  initialize: function(hex, index){
-    this.hex = '#' + hex.gsub('#', '');
-    this.index = index;
-    this.hasColorPicker = false;
-    this.html = new Template([
-      '<div class="color" style="background-color: #{bgColor}; width: #{width}; display: none;">',
-        '<strong>#{bgColor}</strong>',
-        '<input type="text" value="#{bgColor}" />',
-        '<ul>',
-          '<li><a href="#Remove" title="Remove">x</a></li>',
-          '<li><a href="#Edit">edit</a></li>',
-          '<li><a href="#Move" class="move">move</a></li>',
-        '</ul>',
-      '</div>'
-    ].join(''));
-    this.add();
-  },
-  
-  add: function(){
-    $('stage').insert(this.html.evaluate({ bgColor: this.hex, width: '0px' }));
-    this.acquireElements();
-    this.updateWidthsOfColors();
-    this.element.appear({ duration: .3, queue: 'end' }); // appear effect should try to be merged in with the morph method
-    document.fire('color:added', { hex: this.hex });
-  },
-  
-  acquireElements: function(){
-    this.element = $$('.color').last();
-    this.input = this.element.down('input');
-    this.strong = this.element.down('strong');
-  },
-  
-  remove: function(){
-    this.element.fade({ duration: .25, afterFinish: function(){
-      this.element.remove();
-      document.fire('color:removed', { hex: this.hex });
-      this.updateWidthsOfColors();
-    }.bind(this)});
-  },
-  
-  update: function(color){
-    this.hex = '#' + color;
-    this.element.morph({ background: this.hex }, { duration: .3 });
-    this.input.value = this.hex;
-    this.strong.update(this.hex);
-  },
-  
-  updateWidthsOfColors: function(){
-    // TODO: use an internal object, not a DOM element
-    var colors = $$('.color');
-    colors.each(function(c, i){
-      var width = (colors.length == 1) ? '100%' : (1/colors.length * 100) + '%';
-      c.morph({ width: width }, { duration: .5 });
-    });
-  }
-  
-});
-
 
 var Swatchlet = Class.create({
   
@@ -173,7 +11,8 @@ var Swatchlet = Class.create({
   },
   
   setup: function(){
-    this.domain = '';// 'http://swatchlet.com/';
+    // 'http://swatchlet.com/';
+    this.domain = '';
     this.stage = $('stage');
     this.colors = [];
     
@@ -330,17 +169,3 @@ function stripColors (str) {
     return s;
   }
 }
-
-if(window['console'] === undefined)
-  window.console = { log: Prototype.emptyFunction };
-
-new Swatchlet();
-
-Event.observe(window, 'unload', Prototype.emptyFunction);
-
-function fireWindowLoaded(){
-  document.fire('window:loaded');
-};
-
-Event.observe(window, 'load', function(){ fireWindowLoaded.defer(); });
-

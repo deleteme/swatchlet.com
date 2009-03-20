@@ -1,3 +1,8 @@
+//= require <ColorMethods>
+//= require <ColorValuePicker>
+//= require <Slider>
+// provide "images"
+
 /*
 Copyright (c) 2007 John Dyer (http://johndyer.name)
 MIT style license
