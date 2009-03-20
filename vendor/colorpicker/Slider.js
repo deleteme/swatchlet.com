@@ -13,7 +13,7 @@ Refresh.Web.DefaultSliderSettings = {
   xMaxValue: 100,
   yMinValue: 0,
   yMaxValue: 100,
-  arrowImage: 'colorpicker/images/rangearrows.gif'
+  arrowImage: '<%= COLOR_PICKER_CLIENT_FILES_PATH %>rangearrows.gif'
 }
 
 

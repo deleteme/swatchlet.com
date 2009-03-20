@@ -1,7 +1,7 @@
+//= provide "assets"
 //= require "ColorMethods"
 //= require "ColorValuePicker"
 //= require "Slider"
-// provide "images"
 
 /*
 Copyright (c) 2007 John Dyer (http://johndyer.name)
@@ -14,7 +14,7 @@ if (!Refresh.Web) Refresh.Web = {};
 Refresh.Web.DefaultColorPickerSettings = {
   startMode:'h',
   startHex:'ff0000',
-  clientFilesPath: 'colorpicker/images/'
+  clientFilesPath: '<%= COLOR_PICKER_CLIENT_FILES_PATH %>'
 };
 
 Refresh.Web.ColorPicker = Class.create();
