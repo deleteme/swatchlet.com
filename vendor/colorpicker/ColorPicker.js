@@ -1,6 +1,6 @@
-//= require <ColorMethods>
-//= require <ColorValuePicker>
-//= require <Slider>
+//= require "ColorMethods"
+//= require "ColorValuePicker"
+//= require "Slider"
 // provide "images"
 
 /*
