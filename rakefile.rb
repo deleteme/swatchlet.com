@@ -1,6 +1,6 @@
 require "sprockets"
 
-task :build do
+task :build => [:copy_tests, :copy_selenium] do
   if File.exists?('public/javascripts/application.js')
     File.delete('public/javascripts/application.js')
   end
@@ -19,3 +19,12 @@ task :build do
   # Install provided assets into the asset root
   secretary.install_assets
 end
+
+task :copy_tests do
+  sh 'cp -R tests/ public/tests'
+end
+
+task :copy_selenium do
+  sh 'cp -R vendor/selenium-core/src/main/resources/core/ public/core'
+end
+
