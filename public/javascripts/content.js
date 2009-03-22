@@ -6,7 +6,7 @@ var Content = {
     this.close = $('close').observe('click', this.closeContent.bind(this));
     
     document.observe('link:clicked', function(e){
-      if (e.element().match('a[href=#about]')) {
+      if (e.target.match('a[href=#about]')) {
         this.showAbout();
         e.target.blur();
         e.stop();
