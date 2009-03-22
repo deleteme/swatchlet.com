@@ -7,3 +7,6 @@
 [submodule "vendor/sprockets"]
 	path = vendor/sprockets
 	url = git://github.com/sstephenson/sprockets.git
+[submodule "vendor/selenium-core"]
+	path = vendor/selenium-core
+	url = git://github.com/ph7/selenium-core.git
