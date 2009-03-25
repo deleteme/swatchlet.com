@@ -18,9 +18,8 @@ var ColorPicker = {
     }.bind(this));
     
     this.cp.select('input[type=text]').each(function(el, i){
-      el.observe('keypress', function(e){
-        console.log(e);
-        if (e.KEY_RETURN) this.pickColor(e);
+      el.observe('keyup', function(e){
+        if (e.keyCode == Event.KEY_RETURN) this.pickColor(e);
       }.bind(this));
     }.bind(this));
     
