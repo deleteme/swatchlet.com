@@ -17,11 +17,14 @@ var ColorPicker = {
       e.stop();
     }.bind(this));
     
-    this.okButton.observe('click', function(e){
-      document.fire('color:picked', { hex: this.cp1._cvp.color.hex });
-      this.close();
-      e.stop();
+    this.cp.select('input[type=text]').each(function(el, i){
+      el.observe('keypress', function(e){
+        console.log(e);
+        if (e.KEY_RETURN) this.pickColor(e);
+      }.bind(this));
     }.bind(this));
+    
+    this.okButton.observe('click', this.pickColor.bind(this));
     
     document.observe('move:mousedown', this.close.bind(this));
     
@@ -43,6 +46,12 @@ var ColorPicker = {
   
   update: function(e){
     // console.log('updated', e);
+  },
+  
+  pickColor: function(e){
+    document.fire('color:picked', { hex: this.cp1._cvp.color.hex });
+    this.close();
+    e.stop();
   }
   
 };
