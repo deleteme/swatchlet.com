@@ -5,8 +5,9 @@ var Links = {
     
     this.links.observe('click', function(e){
       if ($(e.target).readAttribute('href').include('#')) {
-        $(e.target).fire('link:clicked', { href: $(e.target).readAttribute('href') });
-        $(e.target).blur();
+        var el = $(e.target);
+        el.fire('link:clicked', { href: el.readAttribute('href') });
+        el.blur();
         e.stop();
       }
     });

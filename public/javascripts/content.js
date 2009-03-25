@@ -8,11 +8,11 @@ var Content = {
     document.observe('link:clicked', function(e){
       if (e.target.match('a[href=#about]')) {
         this.showAbout();
-        e.target.blur();
-        e.stop();
       } else {
         this.closeContent();
       }
+      e.target.blur();
+      e.stop();
     }.bind(this));
   },
 
