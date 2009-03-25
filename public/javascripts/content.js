@@ -10,6 +10,8 @@ var Content = {
         this.showAbout();
         e.target.blur();
         e.stop();
+      } else {
+        this.closeContent();
       }
     }.bind(this));
   },
