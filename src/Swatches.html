@@ -1,0 +1,23 @@
+<div class='swatches'>
+  {#each $swatches as swatch, i}
+    <Swatch value={swatch.value} i={i} />
+  {/each}
+</div>
+
+<style>
+.swatches {
+  bottom: 0;
+  display: flex;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+</style>
+
+<script>
+  import store from './store.js';
+  export default {
+    components: { Swatch: './Swatch.html' }
+  };
+</script>
