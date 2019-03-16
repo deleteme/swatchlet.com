@@ -1,6 +1,8 @@
+import { memoize } from './memoize.js';
+
 const fragmentRegExp = /#(.+)$/;
 
-export function parseURL(url) {
+export const parseURL = memoize(function _parseURL(url) {
   const match = url.match(fragmentRegExp);
   if (!match) return;
   const [_, paramString] = match;
@@ -16,16 +18,16 @@ export function parseURL(url) {
     return;
   }
   return state;
-}
+});
 
-export function toString(state) {
+export const toString = memoize(function _toString(state) {
   const p = new URLSearchParams();
   Object.entries(state).forEach(([key, value]) => {
     p.append(key, JSON.stringify(value));
   });
   return p.toString();
-}
+});
 
-export function renderHash(state) {
+export const renderHash = memoize(function _renderHash(state) {
   return `#${toString(state)}`;
-}
+});

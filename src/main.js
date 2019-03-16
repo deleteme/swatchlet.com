@@ -1,18 +1,17 @@
 import App from './App.html';
 import store from './store.js';
-import { parseURL, toString } from './url-helpers.js';
+import { parseURL, toString, renderHash } from './url-helpers.js';
 import initialState from './initial-state.js';
+import { memoize } from './memoize.js';
+
 const a = toString(initialState);
 const b = toString(parseURL(`x#${a}`));
 console.log('testing url helpers');
-console.assert(
-  a === b,
-  { message: 'parseURL is compatable with toString' }
-);
+console.assert(a === b, { message: 'parseURL is compatible with toString' });
 
 window.store = store;
 
-const syncURLtoState = url => {
+const syncURLtoState = memoize(function _syncURLtoState(url) {
   console.log('syncURLtoState');
   const newState = parseURL(url);
   if (newState) {
@@ -20,7 +19,7 @@ const syncURLtoState = url => {
     store.set(newState);
     return true;
   }
-};
+});
 
 if (!syncURLtoState(location.href)) {
   console.log('redirecting to ', toString(initialState));
@@ -28,6 +27,16 @@ if (!syncURLtoState(location.href)) {
   console.log('manually setting initial state');
   store.set(initialState);
 }
+
+const syncStateToUrl = ({ current }) => {
+  console.log('syncStateToUrl', current);
+  const url = renderHash(current);
+  if (url !== location.hash) {
+    location.hash = url;
+  }
+};
+
+store.on('state', syncStateToUrl);
 
 const handleHashChange = e => {
   console.log('handle hash change');
@@ -40,5 +49,5 @@ const app = new App({
   target: document.body,
   store
 });
-console.log(' exporting app');
+console.log('exporting app');
 export default app;
