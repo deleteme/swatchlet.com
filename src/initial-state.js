@@ -1,4 +1,7 @@
 export default {
   name: 'world',
-  swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }]
+  swatches: [
+    { name: 'White', value: '#ffffff' },
+    { name: 'Fuschia', value: '#ff00cc' }
+  ]
 };

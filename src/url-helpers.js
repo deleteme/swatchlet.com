@@ -9,21 +9,60 @@ export const parseURL = memoize(function _parseURL(url) {
   // bail early again
   if (!paramString || !paramString.includes('=')) return;
   const p = new URLSearchParams(paramString);
-  const state = {};
+  const intermediateState = {};
   try {
     for (var [key, value] of p) {
-      state[key] = JSON.parse(value);
+      intermediateState[key] = JSON.parse(value);
     }
   } catch (e) {
     return;
   }
-  return state;
+  return {
+    name: intermediateState.name,
+    swatches: namesAndValuesToSwatches(
+      intermediateState.names,
+      intermediateState.values
+    )
+  };
+});
+
+// This converts the swatches to an intermediate representation that is better
+// suited for use in the url. The intermediate shape works better with
+// memoization because it's not a deep object.
+//
+// Swatches shape:
+// [{ name: 'some name', value: '#123bbd' }]
+//
+// Intermediate shape for the url:
+// names: ['some name']
+// values: ['#123bbd']
+//
+const namesAndValuesToSwatches = memoize(function _namesAndValuesToSwatches(
+  names,
+  values
+) {
+  return names.map((name, i) => ({ name, value: values[i] }));
+});
+
+const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
+  ...swatches
+) {
+  const names = swatches.map(swatch => swatch.name);
+  const values = swatches.map(swatch => swatch.value);
+  return { names, values };
 });
 
 export const toString = memoize(function _toString(state) {
   const p = new URLSearchParams();
   Object.entries(state).forEach(([key, value]) => {
-    p.append(key, JSON.stringify(value));
+    if (key === 'swatches') {
+      const swatches = value;
+      const { names, values } = swatchesToNamesAndValues(...swatches);
+      p.append('names', JSON.stringify(names));
+      p.append('values', JSON.stringify(values));
+    } else {
+      p.append(key, JSON.stringify(value));
+    }
   });
   return p.toString();
 });
