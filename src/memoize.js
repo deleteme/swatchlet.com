@@ -1,11 +1,5 @@
-const isStrictlyEqual = (a, b) => a === b;
-
-const isEqualWithin = (a, b) => {
-  return Object.entries(a).every(([aKey, aValue]) => {
-    const bValue = b[aKey];
-    return isStrictlyEqual(aValue, bValue);
-  });
-};
+import { isStrictlyEqual } from './lib/is-strictly-equal.js';
+import { isEqualWithin } from './lib/is-equal-within.js';
 
 const isTypeEqual = (a, b) => {
   return typeof a === typeof b;
@@ -76,13 +70,13 @@ export function memoize(fn) {
       //log(fn);
       return previousValue;
     } else {
-      console.log(
-        fn,
-        'miss!\n  previousArgs',
-        previousArgs,
-        '\n  !== args',
-        args
-      );
+      //console.log(
+        //fn,
+        //'miss!\n  previousArgs',
+        //previousArgs,
+        //'\n  !== args',
+        //args
+      //);
       const value = fn(...args);
       previousArgs = args;
       previousValue = value;
