@@ -1,25 +1,4 @@
-import { isStrictlyEqual } from './lib/is-strictly-equal.js';
-import { isEqualWithin } from './lib/is-equal-within.js';
-
-const isTypeEqual = (a, b) => {
-  return typeof a === typeof b;
-};
-
-const isShallowEqual = (a, b) => {
-  if (isStrictlyEqual(a, b)) {
-    return true;
-  } else if (!isTypeEqual(a, b)) {
-    return false;
-  } else {
-    const isAShallowEqualToB = isEqualWithin(a, b);
-    if (isAShallowEqualToB) {
-      const isBShallowEqualToA = isEqualWithin(b, a);
-      return isBShallowEqualToA;
-    } else {
-      return false;
-    }
-  }
-};
+import { isShallowEqual } from './lib/is-shallow-equal.js';
 
 const areArrayValuesShallowEqual = (array1, array2) => {
   if (array1.length !== array2.length) {
