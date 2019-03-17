@@ -1,14 +1,4 @@
-import { isShallowEqual } from './lib/is-shallow-equal.js';
-
-const areArrayValuesShallowEqual = (array1, array2) => {
-  if (array1.length !== array2.length) {
-    return false;
-  } else {
-    return array1.every((value, i) => {
-      return isShallowEqual(value, array2[i]);
-    });
-  }
-};
+import { areArrayValuesShallowEqual } from './lib/are-array-values-shallow-equal.js';
 
 const cache = { calls: new WeakMap(), hits: new WeakMap() };
 const track = (weakmap, fn) => {
