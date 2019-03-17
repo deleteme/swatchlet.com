@@ -9,20 +9,10 @@ export const parseURL = memoize(function _parseURL(url) {
   // bail early again
   if (!paramString || !paramString.includes('=')) return;
   const p = new URLSearchParams(paramString);
-  const intermediateState = {};
-  try {
-    for (var [key, value] of p) {
-      intermediateState[key] = JSON.parse(value);
-    }
-  } catch (e) {
-    return;
-  }
+  const get = key => JSON.parse(p.get(key));
   return {
-    name: intermediateState.name,
-    swatches: namesAndValuesToSwatches(
-      intermediateState.names,
-      intermediateState.values
-    )
+    name: get('name'),
+    swatches: namesAndValuesToSwatches(get('names'), get('values'))
   };
 });
 
