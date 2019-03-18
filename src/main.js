@@ -10,7 +10,7 @@ const syncURLtoState = memoize(function _syncURLtoState(url) {
   //console.log('syncURLtoState');
   const newState = parseURL(url);
   if (newState) {
-    console.log('newState', newState);
+    //console.log('newState', newState);
     store.set(newState);
     return true;
   }
