@@ -25,7 +25,7 @@ const log = fn => {
   ]);
 };
 
-export function memoize(fn) {
+export function memoize(fn, enableLog) {
   cache.calls.set(fn, 0);
   cache.hits.set(fn, 0);
   let previousArgs = [];
@@ -36,20 +36,21 @@ export function memoize(fn) {
     const args = [...arguments];
     if (areArrayValuesShallowEqual(previousArgs, args)) {
       track(cache.hits, fn);
-      //log(fn);
+      //if (enableLog) log(fn);
       return previousValue;
     } else {
-      //console.log(
-        //fn,
-        //'miss!\n  previousArgs',
-        //previousArgs,
-        //'\n  !== args',
-        //args
-      //);
+      if (enableLog)
+        console.log(
+          fn,
+          'miss!\n  previousArgs',
+          previousArgs,
+          '\n  !== args',
+          args
+        );
       const value = fn(...args);
       previousArgs = args;
       previousValue = value;
-      //log(fn);
+      //if (enableLog) log(fn);
       return value;
     }
   };

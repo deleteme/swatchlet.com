@@ -42,7 +42,7 @@ const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
   return { names, values };
 });
 
-export const toString = memoize(function _toString(state) {
+export function toString(state) {
   const p = new URLSearchParams();
   Object.entries(state).forEach(([key, value]) => {
     if (key === 'swatches') {
@@ -55,8 +55,8 @@ export const toString = memoize(function _toString(state) {
     }
   });
   return p.toString();
-});
+}
 
-export const renderHash = memoize(function _renderHash(state) {
+export function renderHash(state) {
   return `#${toString(state)}`;
-});
+}
