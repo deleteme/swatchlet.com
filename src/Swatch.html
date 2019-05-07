@@ -6,7 +6,10 @@
     style='font-size: calc(100vw / {$swatches.length} * 0.2);'
   />
   <div class="actions">
-    <ButtonLink href='{removeHref}'>
+    <Button on:click='pick(i)' type='button' class='swatch-action'>
+      Pick
+    </Button>
+    <ButtonLink href='{removeHref}' class='swatch-action'>
       X
     </ButtonLink>
   </div>
@@ -23,14 +26,22 @@
 }
 
 .swatch:hover .actions {
-  display: block;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .actions {
+  align-items: center;
   display: none;
+  flex-direction: row;
   position: absolute;
   right: 5px;
   top: 50px;
+  width: calc(100% - 5px * 2);
+}
+
+:global(.swatch-action) {
+  margin-left: 5px;
 }
 
 input {
@@ -52,7 +63,8 @@ input {
   import store from './store.js';
 	export default {
 		components: {
-			ButtonLink: './ButtonLink.html'
+			ButtonLink: './ButtonLink.html',
+			Button: './Button.html'
 		},
     methods: {
       edit: (value, i) => {
@@ -64,6 +76,9 @@ input {
           })
         });
       },
+      pick: (index) => {
+        console.log('pick called with index', index);
+      }
     },
     computed: {
       removeHref: ({ i, $swatches }) => {
