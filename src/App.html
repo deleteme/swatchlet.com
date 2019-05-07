@@ -1,6 +1,10 @@
 <div>
-<Header />
-<Swatches />
+  {#if typeof $picking === 'number'}
+    <Picker picking={$picking} />
+  {:else}
+    <Header />
+    <Swatches />
+  {/if}
 </div>
 
 <style>
@@ -11,6 +15,10 @@ div {
 
 <script>
   export default {
-    components: { Swatches: './Swatches.html', Header: './Header.html' }
+    components: {
+      Swatches: './Swatches.html',
+      Header: './Header.html',
+      Picker: './Picker.html'
+    }
   };
 </script>

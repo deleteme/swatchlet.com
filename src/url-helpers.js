@@ -45,7 +45,9 @@ const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
 export function toString(state) {
   const p = new URLSearchParams();
   Object.entries(state).forEach(([key, value]) => {
-    if (key === 'swatches') {
+    if (key === 'picking') {
+      // nope
+    } else if (key === 'swatches') {
       const swatches = value;
       const { names, values } = swatchesToNamesAndValues(...swatches);
       p.append('names', JSON.stringify(names));

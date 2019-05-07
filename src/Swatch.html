@@ -77,7 +77,7 @@ input {
         });
       },
       pick: (index) => {
-        console.log('pick called with index', index);
+        store.set({ picking: index });
       }
     },
     computed: {

@@ -1,0 +1,21 @@
+<div>
+  Picking: {picking}
+  <Button on:click='cancelPicking()'>X</Button>
+</div>
+
+<style>
+</style>
+
+<script>
+  import store, { defaultState } from './store.js';
+  export default {
+    components: { Button: './Button.html' },
+    methods: {
+      cancelPicking: () => {
+        store.set({
+          picking: defaultState.picking
+        });
+      }
+    }
+  };
+</script>

@@ -1,7 +1,7 @@
 import App from './App.html';
 import store from './store.js';
 import { parseURL, toString, renderHash } from './url-helpers.js';
-import initialState from './initial-state.js';
+//import initialState from './initial-state.js';
 import { memoize } from './memoize.js';
 
 window.store = store;
@@ -17,10 +17,10 @@ const syncURLtoState = memoize(function _syncURLtoState(url) {
 });
 
 if (!syncURLtoState(location.href)) {
-  //console.log('redirecting to ', toString(initialState));
-  location.hash = toString(initialState);
+  console.log('redirecting to ', store.get());
+  location.hash = toString(store.get());
   //console.log('manually setting initial state');
-  store.set(initialState);
+  //store.set(initialState);
 }
 
 const syncStateToUrl = memoize(function _syncStateToUrl(state) {
