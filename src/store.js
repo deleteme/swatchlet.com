@@ -20,6 +20,10 @@ export default new SwatchStore({
   ...initialStateFromURL
 });
 
+export const pick = index => {
+  store.set({ picking: index });
+};
+
 export const cancelPicking = () => {
   store.set({
     picking: defaultState.picking

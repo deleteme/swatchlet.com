@@ -60,7 +60,7 @@ input {
 
 <script>
   import { renderHash } from './url-helpers.js';
-  import store from './store.js';
+  import store, { pick } from './store.js';
 	export default {
 		components: {
 			ButtonLink: './ButtonLink.html',
@@ -76,9 +76,7 @@ input {
           })
         });
       },
-      pick: (index) => {
-        store.set({ picking: index });
-      }
+      pick
     },
     computed: {
       removeHref: ({ i, $swatches }) => {
