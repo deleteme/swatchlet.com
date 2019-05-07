@@ -1,5 +1,5 @@
 <div>
-  Picking: {picking}
+  Picking: {$picking}
   <Button on:click='cancelPicking()'>X</Button>
 </div>
 
@@ -7,15 +7,11 @@
 </style>
 
 <script>
-  import store, { defaultState } from './store.js';
+  import store, { cancelPicking } from './store.js';
   export default {
     components: { Button: './Button.html' },
     methods: {
-      cancelPicking: () => {
-        store.set({
-          picking: defaultState.picking
-        });
-      }
+      cancelPicking
     }
   };
 </script>
