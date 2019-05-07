@@ -1,15 +1,25 @@
-<div>
-  Picking: {$picking}
-  <Button on:click='cancelPicking()'>X</Button>
+<div class="picker" style='background: {$swatches[$picking].value}'>
+  <ActionBar>
+    Picking: {$swatches[$picking].name}
+    <Button on:click="cancelPicking()">X</Button>
+  </ActionBar>
 </div>
 
 <style>
+.picker {
+  height: 100%;
+  width: 100%;
+}
+.picker:hover :global(.actions) {
+  display: flex;
+  justify-content: flex-end;
+}
 </style>
 
 <script>
   import store, { cancelPicking } from './store.js';
   export default {
-    components: { Button: './Button.html' },
+    components: { ActionBar: './ActionBar.html', Button: './Button.html' },
     methods: {
       cancelPicking
     }

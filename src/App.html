@@ -1,4 +1,4 @@
-<div>
+<div class="app">
   {#if typeof $picking === 'number'}
     <Picker />
   {:else}
@@ -8,9 +8,13 @@
 </div>
 
 <style>
-div {
+.app {
   font-family: "SF Mono";
+  height: 100%;
+  width: 100%;
+  position: relative;
 }
+:global(body) { padding: 0; }
 </style>
 
 <script>
