@@ -1,4 +1,4 @@
-*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
+*Psst — looking for a shareable component template? Go here --> [sveltejs/component-template](https://github.com/sveltejs/component-template)*
 
 ---
 
@@ -9,9 +9,7 @@ This is a project template for [Svelte](https://svelte.technology) apps. It live
 To create a new project based on this template using [degit](https://github.com/Rich-Harris/degit):
 
 ```bash
-npm install -g degit # you only need to do this once
-
-degit sveltejs/template svelte-app
+npx degit sveltejs/template svelte-app
 cd svelte-app
 ```
 
@@ -68,3 +66,4 @@ Then, from within your project folder:
 npm run build
 surge public
 ```
+
