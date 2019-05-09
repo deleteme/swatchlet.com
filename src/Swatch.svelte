@@ -54,9 +54,9 @@ input {
   import store, { pick } from './store.js';
 	export default {
 		components: {
-			ButtonLink: './ButtonLink.html',
-			Button: './Button.html',
-      ActionBar: './ActionBar.html'
+			ButtonLink: './ButtonLink.svelte',
+			Button: './Button.svelte',
+      ActionBar: './ActionBar.svelte'
 		},
     methods: {
       edit: (value, i) => {

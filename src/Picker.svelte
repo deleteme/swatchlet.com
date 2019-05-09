@@ -19,7 +19,7 @@
 <script>
   import store, { cancelPicking } from './store.js';
   export default {
-    components: { ActionBar: './ActionBar.html', Button: './Button.html' },
+    components: { ActionBar: './ActionBar.svelte', Button: './Button.svelte' },
     methods: {
       cancelPicking
     }

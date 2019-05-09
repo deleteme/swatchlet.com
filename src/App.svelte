@@ -20,9 +20,9 @@
 <script>
   export default {
     components: {
-      Swatches: './Swatches.html',
-      Header: './Header.html',
-      Picker: './Picker.html'
+      Swatches: './Swatches.svelte',
+      Header: './Header.svelte',
+      Picker: './Picker.svelte'
     }
   };
 </script>

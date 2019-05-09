@@ -4,7 +4,7 @@
   import { renderHash } from './url-helpers.js';
   import store from './store.js';
   export default {
-    components: { ButtonLink: './ButtonLink.html' },
+    components: { ButtonLink: './ButtonLink.svelte' },
     computed: {
       addHref: ({$swatches}) => {
         const state = store.get();

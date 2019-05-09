@@ -1,4 +1,4 @@
-import App from './App.html';
+import App from './App.svelte';
 import store from './store.js';
 import { parseURL, toString, renderHash } from './url-helpers.js';
 //import initialState from './initial-state.js';

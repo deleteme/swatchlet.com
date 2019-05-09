@@ -18,6 +18,6 @@
 <script>
   import store from './store.js';
   export default {
-    components: { Swatch: './Swatch.html' }
+    components: { Swatch: './Swatch.svelte' }
   };
 </script>

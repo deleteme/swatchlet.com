@@ -42,7 +42,7 @@ input:focus {
 <script>
 export default {
   components: {
-    AddNewColor: './AddNewColor.html'
+    AddNewColor: './AddNewColor.svelte'
   }
 }
 </script>
