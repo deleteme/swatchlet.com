@@ -1,3 +1,7 @@
+<script>
+import AddNewColor from './AddNewColor.svelte';
+</script>
+
 <style>
 header {
   background: rgba(0, 0, 0, 0.6);
@@ -38,11 +42,3 @@ input:focus {
     <AddNewColor />
   </div>
 </header>
-
-<script>
-export default {
-  components: {
-    AddNewColor: './AddNewColor.svelte'
-  }
-}
-</script>

@@ -1,3 +1,9 @@
+<script>
+  import ActionBar from './ActionBar.svelte';
+  import Button from './Button.svelte';
+  import store, { cancelPicking } from './store.js';
+</script>
+
 <style>
 .picker {
   height: 100%;
@@ -15,13 +21,3 @@
     <Button on:click="cancelPicking()">X</Button>
   </ActionBar>
 </div>
-
-<script>
-  import store, { cancelPicking } from './store.js';
-  export default {
-    components: { ActionBar: './ActionBar.svelte', Button: './Button.svelte' },
-    methods: {
-      cancelPicking
-    }
-  };
-</script>

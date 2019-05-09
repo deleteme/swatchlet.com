@@ -1,3 +1,9 @@
+<script>
+import Swatches from './Swatches.svelte';
+import Header from './Header.svelte';
+import Picker from './Picker.svelte';
+</script>
+
 <style>
 .app {
   font-family: "SF Mono";
@@ -16,13 +22,3 @@
     <Swatches />
   {/if}
 </div>
-
-<script>
-  export default {
-    components: {
-      Swatches: './Swatches.svelte',
-      Header: './Header.svelte',
-      Picker: './Picker.svelte'
-    }
-  };
-</script>

@@ -1,3 +1,8 @@
+<script>
+  import store from './store.js';
+  import Swatch from './Swatch.svelte';
+</script>
+
 <style>
 .swatches {
   bottom: 0;
@@ -14,10 +19,3 @@
   <Swatch name={swatch.name} value={swatch.value} i={i} />
   {/each}
 </div>
-
-<script>
-  import store from './store.js';
-  export default {
-    components: { Swatch: './Swatch.svelte' }
-  };
-</script>

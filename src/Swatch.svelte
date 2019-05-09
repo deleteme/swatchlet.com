@@ -1,3 +1,29 @@
+<script>
+  import { renderHash } from './url-helpers.js';
+  import store, { pick } from './store.js';
+  import ButtonLink from './ButtonLink.svelte';
+  import Button from './Button.svelte';
+  import ActionBar from './ActionBar.svelte';
+  const edit = (value, i) => {
+    const state = store.get();
+    location.hash = renderHash({
+      ...state,
+      swatches: state.swatches.map((swatch, j) => {
+        return i === j ? { value } : swatch
+      })
+    });
+  };
+  const removeHref = ({ i, $swatches }) => {
+    const state = store.get()
+    return renderHash({
+      ...state,
+      swatches: $swatches.filter((s, j) => {
+        return i !== j;
+      })
+    });
+  };
+</script>
+
 <style>
 .swatch {
   display: flex;
@@ -48,38 +74,3 @@ input {
     </ButtonLink>
   </ActionBar>
 </div>
-
-<script>
-  import { renderHash } from './url-helpers.js';
-  import store, { pick } from './store.js';
-	export default {
-		components: {
-			ButtonLink: './ButtonLink.svelte',
-			Button: './Button.svelte',
-      ActionBar: './ActionBar.svelte'
-		},
-    methods: {
-      edit: (value, i) => {
-        const state = store.get();
-        location.hash = renderHash({
-          ...state,
-          swatches: state.swatches.map((swatch, j) => {
-            return i === j ? { value } : swatch
-          })
-        });
-      },
-      pick
-    },
-    computed: {
-      removeHref: ({ i, $swatches }) => {
-        const state = store.get()
-        return renderHash({
-          ...state,
-          swatches: $swatches.filter((s, j) => {
-            return i !== j;
-          })
-        });
-      }
-    }
-	};
-</script>
