@@ -1,7 +1,3 @@
-<div class="actions">
-  <slot></slot>
-</div>
-
 <style>
 .actions {
   align-items: center;
@@ -13,3 +9,8 @@
   width: calc(100% - 5px * 2);
 }
 </style>
+
+<div class="actions">
+  <slot></slot>
+</div>
+

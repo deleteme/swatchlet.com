@@ -1,13 +1,3 @@
-<header>
-  <div>
-    <label for="name">Name</label>
-    <input type="text" bind:value=$name id="name" />
-  </div>
-  <div>
-    <AddNewColor />
-  </div>
-</header>
-
 <style>
 header {
   background: rgba(0, 0, 0, 0.6);
@@ -38,6 +28,16 @@ input:focus {
   background: black;
 }
 </style>
+
+<header>
+  <div>
+    <label for="name">Name</label>
+    <input type="text" bind:value=$name id="name" />
+  </div>
+  <div>
+    <AddNewColor />
+  </div>
+</header>
 
 <script>
 export default {

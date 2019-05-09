@@ -1,12 +1,3 @@
-<div class="app">
-  {#if typeof $picking === 'number'}
-    <Picker />
-  {:else}
-    <Header />
-    <Swatches />
-  {/if}
-</div>
-
 <style>
 .app {
   font-family: "SF Mono";
@@ -16,6 +7,15 @@
 }
 :global(body) { padding: 0; }
 </style>
+
+<div class="app">
+  {#if typeof $picking === 'number'}
+    <Picker />
+  {:else}
+    <Header />
+    <Swatches />
+  {/if}
+</div>
 
 <script>
   export default {

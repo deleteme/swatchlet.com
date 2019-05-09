@@ -1,21 +1,3 @@
-<div class="swatch" style='background-color: {value};'>
-  <input
-    type="text"
-    bind:value=value
-    on:change='edit(value, i)'
-    style='font-size: calc(100vw / {$swatches.length} * 0.2);'
-  />
-  <ActionBar>
-    {name}
-    <Button on:click='pick(i)' type='button' class='swatch-action'>
-      Pick
-    </Button>
-    <ButtonLink href='{removeHref}' class='swatch-action'>
-      X
-    </ButtonLink>
-  </ActionBar>
-</div>
-
 <style>
 .swatch {
   display: flex;
@@ -48,6 +30,24 @@ input {
   width: 100%;
 }
 </style>
+
+<div class="swatch" style='background-color: {value};'>
+  <input
+    type="text"
+    bind:value=value
+    on:change='edit(value, i)'
+    style='font-size: calc(100vw / {$swatches.length} * 0.2);'
+  />
+  <ActionBar>
+    {name}
+    <Button on:click='pick(i)' type='button' class='swatch-action'>
+      Pick
+    </Button>
+    <ButtonLink href='{removeHref}' class='swatch-action'>
+      X
+    </ButtonLink>
+  </ActionBar>
+</div>
 
 <script>
   import { renderHash } from './url-helpers.js';

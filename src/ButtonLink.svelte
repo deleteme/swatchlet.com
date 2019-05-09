@@ -1,10 +1,3 @@
-<a
-  {href}
-  class={class}
->
-  <slot></slot>
-</a>
-
 <style>
   a {
     align-items: center;
@@ -30,3 +23,10 @@
     outline: white;
   }
 </style>
+
+<a
+  {href}
+  class={class}
+>
+  <slot></slot>
+</a>

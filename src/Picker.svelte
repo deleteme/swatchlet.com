@@ -1,10 +1,3 @@
-<div class="picker" style='background: {$swatches[$picking].value}'>
-  <ActionBar>
-    Picking: {$swatches[$picking].name}
-    <Button on:click="cancelPicking()">X</Button>
-  </ActionBar>
-</div>
-
 <style>
 .picker {
   height: 100%;
@@ -15,6 +8,13 @@
   justify-content: flex-end;
 }
 </style>
+
+<div class="picker" style='background: {$swatches[$picking].value}'>
+  <ActionBar>
+    Picking: {$swatches[$picking].name}
+    <Button on:click="cancelPicking()">X</Button>
+  </ActionBar>
+</div>
 
 <script>
   import store, { cancelPicking } from './store.js';

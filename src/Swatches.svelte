@@ -1,9 +1,3 @@
-<div class='swatches'>
-  {#each $swatches as swatch, i}
-  <Swatch name={swatch.name} value={swatch.value} i={i} />
-  {/each}
-</div>
-
 <style>
 .swatches {
   bottom: 0;
@@ -14,6 +8,12 @@
   top: 0;
 }
 </style>
+
+<div class='swatches'>
+  {#each $swatches as swatch, i}
+  <Swatch name={swatch.name} value={swatch.value} i={i} />
+  {/each}
+</div>
 
 <script>
   import store from './store.js';

@@ -1,11 +1,3 @@
-<button
-  {type}
-  class={class}
-  on:click
->
-  <slot></slot>
-</button>
-
 <style>
   button {
     align-items: center;
@@ -31,3 +23,11 @@
     outline: white;
   }
 </style>
+
+<button
+  {type}
+  class={class}
+  on:click
+>
+  <slot></slot>
+</button>
