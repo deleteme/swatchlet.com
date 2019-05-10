@@ -1,7 +1,7 @@
 <script>
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
-  import store, { cancelPicking } from './store.js';
+  import { picking, swatches, cancelPicking } from './store.js';
 </script>
 
 <style>

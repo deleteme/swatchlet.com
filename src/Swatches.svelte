@@ -1,5 +1,5 @@
 <script>
-  import store from './store.js';
+  import { swatches } from './store.js';
   import Swatch from './Swatch.svelte';
 </script>
 

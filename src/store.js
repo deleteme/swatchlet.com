@@ -1,4 +1,4 @@
-import { Store } from 'svelte/store.js';
+import { writable } from 'svelte/store.js';
 
 import { parseURL } from './url-helpers.js';
 
@@ -13,19 +13,17 @@ const defaultState = {
   picking: null
 };
 
-class SwatchStore extends Store {}
+export const name = writable(initialStateFromURL.name || defaultState.name);
+export const swatches = writable(
+  initialStateFromURL.swatches || defaultState.swatches
+);
 
-export default new SwatchStore({
-  ...defaultState,
-  ...initialStateFromURL
-});
+export const picking = writable(defaultState.picking);
 
 export const pick = index => {
-  store.set({ picking: index });
+  picking.set(index);
 };
 
 export const cancelPicking = () => {
-  store.set({
-    picking: defaultState.picking
-  });
+  picking.set(defaultState.picking);
 };

@@ -1,27 +1,27 @@
 <script>
   import { renderHash } from './url-helpers.js';
-  import store, { pick } from './store.js';
   import ButtonLink from './ButtonLink.svelte';
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
-  const edit = (value, i) => {
-    const state = store.get();
+  import { pick, swatches, name } from './store.js';
+  export let i;
+  export let value;
+  let swatchName;
+  export swatchName as name;
+  $: edit = (value, i) => {
     location.hash = renderHash({
-      ...state,
-      swatches: state.swatches.map((swatch, j) => {
+      name: $name,
+      swatches: $swatches.map((swatch, j) => {
         return i === j ? { value } : swatch
       })
     });
   };
-  const removeHref = ({ i, $swatches }) => {
-    const state = store.get()
-    return renderHash({
-      ...state,
-      swatches: $swatches.filter((s, j) => {
-        return i !== j;
-      })
-    });
-  };
+  $: removeHref = renderHash({
+    name: $name,
+    swatches: $swatches.filter((s, j) => {
+      return i !== j;
+    })
+  });
 </script>
 
 <style>
@@ -65,11 +65,11 @@ input {
     style='font-size: calc(100vw / {$swatches.length} * 0.2);'
   />
   <ActionBar>
-    {name}
+    {swatchName}
     <Button on:click={() => pick(i)} type='button' class='swatch-action'>
       Pick
     </Button>
-    <ButtonLink href='{removeHref}' class='swatch-action'>
+    <ButtonLink href={removeHref} class='swatch-action'>
       X
     </ButtonLink>
   </ActionBar>

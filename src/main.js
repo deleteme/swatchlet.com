@@ -1,28 +1,29 @@
+import { derived, get } from 'svelte/store';
 import App from './App.svelte';
-import store from './store.js';
+import { name, swatches } from './store.js';
 import { parseURL, toString, renderHash } from './url-helpers.js';
-//import initialState from './initial-state.js';
 import { memoize } from './memoize.js';
 
-window.store = store;
 
 const syncURLtoState = memoize(function _syncURLtoState(url) {
-  //console.log('syncURLtoState');
   const newState = parseURL(url);
   if (newState) {
-    //console.log('newState', newState);
-    store.set(newState);
+    name.set(newState.name);
+    swatches.set(newState.swatches);
+    //store.set(newState);
     return true;
   }
 });
 
 if (!syncURLtoState(location.href)) {
-  console.log('redirecting to ', store.get());
-  location.hash = toString(store.get());
-  //console.log('manually setting initial state');
-  //store.set(initialState);
+  console.log('redirecting to ');
+  location.hash = toString({
+    name: get(name),
+    swatches: get(swatches)
+  });
 }
 
+/*
 const syncStateToUrl = memoize(function _syncStateToUrl(state) {
   //console.log('syncStateToUrl', state);
   const url = renderHash(state);
@@ -34,6 +35,17 @@ const syncStateToUrl = memoize(function _syncStateToUrl(state) {
 const handleStateChange = ({ current }) => syncStateToUrl(current);
 
 store.on('state', handleStateChange);
+*/
+
+const derivedLocationHash = derived([name, swatches], ([$name, $swatches]) => {
+  return renderHash({
+    name: $name, swatches, $swatches
+  });
+});
+
+derivedLocationHash.subscribe(hash => {
+  location.hash = hash;
+});
 
 const handleHashChange = e => {
   //console.log('handle hash change');
