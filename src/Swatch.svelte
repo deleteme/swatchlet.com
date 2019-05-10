@@ -60,13 +60,13 @@ input {
 <div class="swatch" style='background-color: {value};'>
   <input
     type="text"
-    bind:value=value
-    on:change='edit(value, i)'
+    bind:value={value}
+    on:change={() => edit(value, i)}
     style='font-size: calc(100vw / {$swatches.length} * 0.2);'
   />
   <ActionBar>
     {name}
-    <Button on:click='pick(i)' type='button' class='swatch-action'>
+    <Button on:click={() => pick(i)} type='button' class='swatch-action'>
       Pick
     </Button>
     <ButtonLink href='{removeHref}' class='swatch-action'>

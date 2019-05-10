@@ -1,3 +1,8 @@
+<script>
+  export let href = '';
+  let klass;
+  export klass as class;
+</script>
 <style>
   a {
     align-items: center;
@@ -26,7 +31,7 @@
 
 <a
   {href}
-  class={class}
+  class={klass}
 >
   <slot></slot>
 </a>

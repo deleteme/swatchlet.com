@@ -36,7 +36,7 @@ input:focus {
 <header>
   <div>
     <label for="name">Name</label>
-    <input type="text" bind:value=$name id="name" />
+    <input type="text" bind:value={$name} id="name" />
   </div>
   <div>
     <AddNewColor />

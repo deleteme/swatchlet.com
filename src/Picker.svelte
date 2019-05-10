@@ -18,6 +18,6 @@
 <div class="picker" style='background: {$swatches[$picking].value}'>
   <ActionBar>
     Picking: {$swatches[$picking].name}
-    <Button on:click="cancelPicking()">X</Button>
+    <Button on:click={cancelPicking}>X</Button>
   </ActionBar>
 </div>

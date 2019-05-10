@@ -1,3 +1,8 @@
+<script>
+  export let type = 'button';
+  let klass = '';
+  export klass as class;
+</script>
 <style>
   button {
     align-items: center;
@@ -26,7 +31,7 @@
 
 <button
   {type}
-  class={class}
+  class={klass}
   on:click
 >
   <slot></slot>
