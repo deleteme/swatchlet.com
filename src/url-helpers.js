@@ -35,7 +35,7 @@ const namesAndValuesToSwatches = memoize(function _namesAndValuesToSwatches(
 });
 
 const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
-  ...swatches
+  swatches
 ) {
   const names = swatches.map(swatch => swatch.name);
   const values = swatches.map(swatch => swatch.value);
@@ -49,7 +49,7 @@ export function toString(state) {
       // nope
     } else if (key === 'swatches') {
       const swatches = value;
-      const { names, values } = swatchesToNamesAndValues(...swatches);
+      const { names, values } = swatchesToNamesAndValues(swatches);
       p.append('names', JSON.stringify(names));
       p.append('values', JSON.stringify(values));
     } else {
