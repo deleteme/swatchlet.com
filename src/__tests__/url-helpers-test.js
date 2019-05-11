@@ -1,4 +1,4 @@
-import { parseURL, toString,renderHash } from '../url-helpers.js';
+import { parseURL, toString, renderHash } from '../url-helpers.js';
 
 describe('parseURL()', () => {
   const url =
@@ -37,9 +37,12 @@ describe('toString()', () => {
     expect(first).toBe(second);
   });
   it('should handle an empty swatches array.', () => {
-    expect(toString({
-      name: 'Alright', swatches: []
-    })).toEqual("name=%22Alright%22&names=%5B%5D&values=%5B%5D");
+    expect(
+      toString({
+        name: 'Alright',
+        swatches: []
+      })
+    ).toEqual('name=%22Alright%22&names=%5B%5D&values=%5B%5D');
   });
 });
 

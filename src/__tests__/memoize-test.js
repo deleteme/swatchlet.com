@@ -47,17 +47,10 @@ describe('memoize()', () => {
           }, [])
         );
         const memoizedGetKeys = memoize(getKeys);
-        const value1 = memoizedGetKeys(
-          { a: 'a' },
-          { b: 'b' }
-        );
+        const value1 = memoizedGetKeys({ a: 'a' }, { b: 'b' });
         expect(getKeys).toHaveBeenCalledTimes(1);
         expect(value1).toEqual(['a', 'b']);
-        const value2 = memoizedGetKeys(
-          { a: 'a' },
-          { b: 'b' },
-          [0]
-        );
+        const value2 = memoizedGetKeys({ a: 'a' }, { b: 'b' }, [0]);
         expect(getKeys).toHaveBeenCalledTimes(2);
         expect(value2).toEqual(['a', 'b', '0']);
       });

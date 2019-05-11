@@ -4,7 +4,6 @@ import { name, swatches } from './store.js';
 import { parseURL, toString, renderHash } from './url-helpers.js';
 import { memoize } from './memoize.js';
 
-
 const syncURLtoState = memoize(function _syncURLtoState(url) {
   const newState = parseURL(url);
   if (newState) {
@@ -39,7 +38,8 @@ store.on('state', handleStateChange);
 
 const derivedLocationHash = derived([name, swatches], ([$name, $swatches]) => {
   return renderHash({
-    name: $name, swatches: $swatches
+    name: $name,
+    swatches: $swatches
   });
 });
 
