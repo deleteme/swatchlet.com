@@ -39,7 +39,7 @@ store.on('state', handleStateChange);
 
 const derivedLocationHash = derived([name, swatches], ([$name, $swatches]) => {
   return renderHash({
-    name: $name, swatches, $swatches
+    name: $name, swatches: $swatches
   });
 });
 
@@ -55,8 +55,7 @@ const handleHashChange = e => {
 window.addEventListener('hashchange', handleHashChange, false);
 
 const app = new App({
-  target: document.body,
-  store
+  target: document.body
 });
 //console.log('exporting app');
 export default app;

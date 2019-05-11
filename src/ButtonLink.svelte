@@ -1,6 +1,6 @@
 <script>
   export let href = '';
-  let klass;
+  let klass = '';
   export { klass as class };
 </script>
 <style>
