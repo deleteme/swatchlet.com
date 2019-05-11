@@ -1,7 +1,7 @@
 <script>
   export let type = 'button';
   let klass = '';
-  export klass as class;
+  export { klass as class };
 </script>
 <style>
   button {

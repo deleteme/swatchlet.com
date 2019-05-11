@@ -1,5 +1,6 @@
 <script>
 import AddNewColor from './AddNewColor.svelte';
+import { name } from './store.js';
 </script>
 
 <style>

@@ -2,6 +2,7 @@
 import Swatches from './Swatches.svelte';
 import Header from './Header.svelte';
 import Picker from './Picker.svelte';
+import { picking } from './store.js';
 </script>
 
 <style>

@@ -7,7 +7,7 @@
   export let i;
   export let value;
   let swatchName;
-  export swatchName as name;
+  export { swatchName as name };
   $: edit = (value, i) => {
     location.hash = renderHash({
       name: $name,
