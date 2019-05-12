@@ -3,6 +3,7 @@
   import Button from './Button.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
   import { picking, swatches, cancelPicking } from './store.js';
+  import PinnedRadios from './PinnedRadios.svelte';
 </script>
 
 <style>
@@ -23,5 +24,6 @@
     Picking: {$swatches[$picking].name}
     <Button on:click={cancelPicking}>X</Button>
   </ActionBar>
+  <PinnedRadios />
   <PickerCanvas />
 </div>
