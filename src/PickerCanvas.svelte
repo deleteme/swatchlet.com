@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { canvasState, COLOR_MODEL_RGB, RANGES, pinned, colorModel, width, height } from './picker-canvas-store.js';
   let mounted;
   let elements, contexts;
@@ -9,6 +9,7 @@
     const [xAxis, yAxis] = $colorModel.replace($pinned, "");
     return [xAxis, yAxis];
   }
+
   const getImageDataDimensions = () => {
     const [xAxis, yAxis] = getAxisFromPinned();
     const [, width] = RANGES[xAxis];
@@ -31,6 +32,7 @@
       elements.primary.height = max;
     }
   }
+
   const getImageData = () => {
     const [width, height] = getImageDataDimensions();
     return contexts.primary.createImageData(width, height);
@@ -108,9 +110,11 @@
       //pinned: elements.pinned.getContext("2d")
     };
 
-    //render();
-    canvasState.subscribe(render);
+    const unsubscribe = canvasState.subscribe(render);
+
+    onDestroy(unsubscribe);
   });
+
 </script>
 
 <style>
