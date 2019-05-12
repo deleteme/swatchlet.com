@@ -38,11 +38,6 @@
     }
   }
 
-  const getImageData = () => {
-    const [width, height] = getImageDataDimensions();
-    return contexts.primary.createImageData(width, height);
-  };
-
   const render = (state) => {
     if (!state.width || !state.height) return;
     renderCanvasSize();
@@ -54,7 +49,7 @@
     const [pinnedValue] = RANGES[state.pinned];
     var index = 0;
     const [imageDataWidth, imageDataHeight] = getImageDataDimensions();
-    const imageData = getImageData();
+    const imageData = contexts.primary.createImageData(imageDataWidth, imageDataHeight);
     const [xAxis, yAxis] = getAxisFromPinned();
     const primaryWidth = RANGES[xAxis][1];// 255
     const primaryHeight = RANGES[yAxis][1];// 255
