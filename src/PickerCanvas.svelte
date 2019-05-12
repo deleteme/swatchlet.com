@@ -25,6 +25,11 @@
     return [ buf, buf8, data ]
   };
 
+  const renderCanvasSize = () => {
+    elements.mounted.width = $width;
+    elements.mounted.height = $height;
+  };
+
   const renderPrimaryCanvasSize = () => {
     if ($colorModel === COLOR_MODEL_RGB) {
       const max = RANGES.R[1]; // 255
@@ -40,6 +45,7 @@
 
   const render = (state) => {
     if (!state.width || !state.height) return;
+    renderCanvasSize();
     renderPrimaryCanvasSize();
 
     var x = 0;
