@@ -123,13 +123,23 @@
     onDestroy(unsubscribe);
   });
 
+  onDestroy(() => {
+    elements = null;
+    contexts = null;
+  });
+
 </script>
 
 <style>
 canvas {
   background: white;
-  height: 100%;
-  width: 100%;
+  bottom: 10%;
+  height: 80%;
+  left: 10%;
+  right: 10%;
+  position: absolute;
+  top: 10%;
+  width: 80%;
 }
 </style>
 
