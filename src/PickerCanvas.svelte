@@ -134,7 +134,6 @@ const render = state => {
       pinnedHeight
     );
 
-    //const xScale = state.width / pinnedWidth;
     const yScale = state.height / pinnedHeight;
     const [buf, buf8, data] = getBuffers(pinnedWidth, pinnedHeight);
     // create a gradient from one to 255
@@ -157,9 +156,9 @@ const render = state => {
     contexts.pinned.putImageData(imageData, 0, 0);
     contexts.mounted.drawImage(
       elements.pinned,
-      $width * primaryVsPinnedThreshold,
+      Math.floor($width * primaryVsPinnedThreshold),
       0,
-      Math.floor($width * (1 - primaryVsPinnedThreshold)),
+      Math.ceil($width * (1 - primaryVsPinnedThreshold)),
       Math.floor(pinnedHeight * yScale)
     );
   })();
@@ -197,14 +196,16 @@ onDestroy(() => {
 
 <style>
 canvas {
-  background: white;
-  bottom: 10%;
-  height: 80%;
-  left: 10%;
-  right: 10%;
+  --golden-ratio: 1.618;
+  --side: calc((1 / var(--golden-ratio)) * 100%);
+  --margin: calc((100% - var(--side)) / 2);
+  bottom: var(--margin);
+  height: var(--side);
+  left: var(--margin);
+  right: var(--margin);
   position: absolute;
-  top: 10%;
-  width: 80%;
+  top: var(--margin);
+  width: var(--side);
 }
 </style>
 

@@ -8,6 +8,7 @@
 <style>
 .picker {
   height: 100%;
+  position: relative;
   width: 100%;
 }
 .picker:hover :global(.actions) {
