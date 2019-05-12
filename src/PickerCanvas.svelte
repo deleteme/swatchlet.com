@@ -61,7 +61,7 @@ const renderPinnedCanvasSize = () => {
 };
 
 const render = state => {
-  if (!state.width || !state.height) return;
+  if (!elements || !contexts || !state.width || !state.height) return;
   renderCanvasSize();
   renderPrimaryCanvasSize();
   renderPinnedCanvasSize();
@@ -171,6 +171,8 @@ const rotatePinned = () => {
   $pinned = COLOR_MODEL_RGB[newIndex];
 };
 
+let unsubscribe;
+
 onMount(() => {
   elements = {
     mounted,
@@ -183,12 +185,12 @@ onMount(() => {
     pinned: elements.pinned.getContext("2d")
   };
 
-  const unsubscribe = canvasState.subscribe(render);
-
-  onDestroy(unsubscribe);
+  unsubscribe = canvasState.subscribe(render);
 });
 
+
 onDestroy(() => {
+  unsubscribe();
   elements = null;
   contexts = null;
 });
