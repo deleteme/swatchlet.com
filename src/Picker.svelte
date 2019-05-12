@@ -1,6 +1,7 @@
 <script>
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
+  import PickerCanvas from './PickerCanvas.svelte';
   import { picking, swatches, cancelPicking } from './store.js';
 </script>
 
@@ -12,6 +13,7 @@
 .picker:hover :global(.actions) {
   display: flex;
   justify-content: flex-end;
+  z-index: 1;
 }
 </style>
 
@@ -20,4 +22,5 @@
     Picking: {$swatches[$picking].name}
     <Button on:click={cancelPicking}>X</Button>
   </ActionBar>
+  <PickerCanvas />
 </div>
