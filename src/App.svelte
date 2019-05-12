@@ -7,7 +7,7 @@ import { picking } from './store.js';
 
 <style>
 .app {
-  font-family: "SF Mono";
+  font-family: "SF Mono", monospace;
   height: 100%;
   width: 100%;
   position: relative;
