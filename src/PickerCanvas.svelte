@@ -12,6 +12,7 @@ import {
 let mounted;
 let elements, contexts;
 const rgb = { R: 0, G: 0, B: 0 };
+const primaryVsPinnedThreshold = 0.65;
 
 const getAxisFromPinned = () => {
   const [xAxis, yAxis] = $colorModel.replace($pinned, "");
@@ -25,8 +26,13 @@ const getImageDataDimensions = () => {
   return [width, height];
 };
 
-const getBuffers = () => {
-  const [w, h] = getImageDataDimensions();
+const getPinnedImageDataDimensions = () => {
+  const width = 1;
+  const height = RANGES[$pinned][1];
+  return [width, height];
+};
+
+const getBuffers = (w, h) => {
   const buf = new ArrayBuffer(h * w * 4); //imageData.data.length);
   const buf8 = new Uint8ClampedArray(buf);
   const data = new Uint32Array(buf);
@@ -60,10 +66,10 @@ const render = state => {
   renderPrimaryCanvasSize();
   renderPinnedCanvasSize();
 
+  const a = 255;
   (function renderPrimaryCanvas() {
     var x = 0;
     var y = 0;
-    const a = 255;
     const [pinnedValue] = RANGES[state.pinned];
     var index = 0;
     const [imageDataWidth, imageDataHeight] = getImageDataDimensions();
@@ -77,7 +83,7 @@ const render = state => {
     const xScale = state.width / primaryWidth;
     const yScale = state.height / primaryHeight;
 
-    const [buf, buf8, data] = getBuffers();
+    const [buf, buf8, data] = getBuffers(imageDataWidth, imageDataHeight);
 
     rgb[state.pinned] = pinnedValue;
     while (y < imageDataHeight) {
@@ -115,8 +121,46 @@ const render = state => {
       elements.primary,
       0,
       0,
-      Math.floor(primaryWidth * xScale * 0.65),
+      Math.floor(primaryWidth * xScale * primaryVsPinnedThreshold),
       Math.floor(primaryHeight * yScale)
+    );
+  })();
+
+  (function renderPinnedCanvas(){
+    var y = 0;
+    const [pinnedWidth, pinnedHeight] = getPinnedImageDataDimensions();
+    const imageData = contexts.pinned.createImageData(
+      pinnedWidth,
+      pinnedHeight
+    );
+
+    //const xScale = state.width / pinnedWidth;
+    const yScale = state.height / pinnedHeight;
+    const [buf, buf8, data] = getBuffers(pinnedWidth, pinnedHeight);
+    // create a gradient from one to 255
+    const [pinnedValue] = RANGES[state.pinned];
+    rgb[state.pinned] = pinnedValue;
+    const others = COLOR_MODEL_RGB.replace(state.pinned, '').split('');
+    // others will be something like ['R', 'G']
+    while (y < pinnedHeight) {
+      rgb[others[0]] = pinnedHeight - y;
+      rgb[others[1]] = pinnedHeight - y;
+      data[y] =
+        (a << 24) | // alpha
+        (rgb.B << 16) | // blue
+        (rgb.G << 8) | // green
+        rgb.R;
+      y += 1;
+    }
+
+    imageData.data.set(buf8);
+    contexts.pinned.putImageData(imageData, 0, 0);
+    contexts.mounted.drawImage(
+      elements.pinned,
+      $width * primaryVsPinnedThreshold,
+      0,
+      Math.floor($width * (1 - primaryVsPinnedThreshold)),
+      Math.floor(pinnedHeight * yScale)
     );
   })();
 };
