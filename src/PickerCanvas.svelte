@@ -98,6 +98,13 @@
     );
   };
 
+  const rotatePinned = () => {
+    const index = COLOR_MODEL_RGB.indexOf($pinned);
+    let newIndex = index + 1;
+    if (!COLOR_MODEL_RGB[newIndex]) newIndex = 0;
+    $pinned = COLOR_MODEL_RGB[newIndex];
+  };
+
   onMount(() => {
     elements = {
       mounted,
@@ -129,5 +136,6 @@ canvas {
   bind:this={mounted}
   bind:clientWidth={$width}
   bind:clientHeight={$height}
+  on:click={rotatePinned}
 >
 </canvas>
