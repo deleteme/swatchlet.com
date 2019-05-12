@@ -1,4 +1,4 @@
-import { writable } from 'svelte/store.js';
+import { writable, derived } from 'svelte/store.js';
 
 export const COLOR_MODEL_RGB = 'RGB';
 const COLOR_MODEL_HSL = 'HSL';
@@ -17,3 +17,10 @@ export const pinned = writable(B);
 export const colorModel = writable(COLOR_MODEL_RGB);
 export const width = writable(null);
 export const height = writable(null);
+
+export const canvasState = derived(
+  [pinned, colorModel, width, height],
+  ([pinned, colorModel, width, height]) => {
+    return { pinned, colorModel, width, height };
+  }
+);
