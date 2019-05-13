@@ -9,8 +9,32 @@ import {
   width,
   height
 } from "./picker-canvas-store.js";
+import { picking, swatches } from './store';
+import hexToRgb from './lib/hex-to-rgb.js';
+import rgbToHex from './lib/rgb-to-hex.js';
+import rgbStringToComponents from './lib/rgb-string-to-components.js';
+
 let mounted;
 let elements, contexts;
+
+const getSwatch = () => {
+  return ($picking === null) ? null : $swatches[$picking];
+};
+
+const getSwatchRgb = () => {
+  var swatchRgb;
+  const swatch = getSwatch();
+  if (!swatch) return;
+  if (swatch.value.startsWith('#')) {
+    swatchRgb = hexToRgb(swatch.value);
+  } else if (swatch.value.startsWith('rgb')) {
+    swatchRgb = rgbStringToComponents(swatch.value);
+  } else {
+    console.warning('unexpected value for swatch', swatch);
+  }
+  return swatchRgb;
+};
+
 const rgb = { R: 0, G: 0, B: 0 };
 const primaryVsPinnedThreshold = 0.65;
 
@@ -62,6 +86,7 @@ const renderPinnedCanvasSize = () => {
 
 const render = state => {
   if (!elements || !contexts || !state.width || !state.height) return;
+  const swatchRgb = getSwatchRgb();
   renderCanvasSize();
   renderPrimaryCanvasSize();
   renderPinnedCanvasSize();
@@ -70,7 +95,6 @@ const render = state => {
   (function renderPrimaryCanvas() {
     var x = 0;
     var y = 0;
-    const [pinnedValue] = RANGES[state.pinned];
     var index = 0;
     const [imageDataWidth, imageDataHeight] = getImageDataDimensions();
     const imageData = contexts.primary.createImageData(
@@ -85,6 +109,7 @@ const render = state => {
 
     const [buf, buf8, data] = getBuffers(imageDataWidth, imageDataHeight);
 
+    const pinnedValue = swatchRgb[state.pinned];
     rgb[state.pinned] = pinnedValue;
     while (y < imageDataHeight) {
       let yAxisValue = y;
@@ -137,13 +162,12 @@ const render = state => {
     const yScale = state.height / pinnedHeight;
     const [buf, buf8, data] = getBuffers(pinnedWidth, pinnedHeight);
     // create a gradient from one to 255
-    const [pinnedValue] = RANGES[state.pinned];
-    rgb[state.pinned] = pinnedValue;
     const others = COLOR_MODEL_RGB.replace(state.pinned, '').split('');
     // others will be something like ['R', 'G']
+    rgb[others[0]] = swatchRgb[others[0]];
+    rgb[others[1]] = swatchRgb[others[1]];
     while (y < pinnedHeight) {
-      rgb[others[0]] = pinnedHeight - y;
-      rgb[others[1]] = pinnedHeight - y;
+      rgb[state.pinned] = pinnedHeight - y;
       data[y] =
         (a << 24) | // alpha
         (rgb.B << 16) | // blue
