@@ -220,7 +220,6 @@ const getIsPrimaryCanvasEvent = e => {
 };
 
 const handleCanvasSwatchEvent = (e, { isPrimaryCanvas }) => {
-  console.log('handleCanvasSwatchEvent', { isPrimaryCanvas });
   const _rgb = { ...$pickingSwatchRgb };
   // translate a click into an rgb value
   if (isPrimaryCanvas) {
@@ -245,13 +244,11 @@ const handleCanvasSwatchEvent = (e, { isPrimaryCanvas }) => {
       pinnedYMax - Math.round(yTargetRatio * pinnedYMax);
     _rgb[$pinned] = yTargetComponentValue;
   }
-  console.log('old swatches', $swatches);
   $swatches = $swatches.map((swatch, i) =>
     i === $picking
       ? { ...swatch, value: rgbToHex(_rgb.R, _rgb.G, _rgb.B) }
       : swatch
   );
-  console.log('new swatches', $swatches);
 }
 
 const handleCanvasClick = e => {
@@ -271,11 +268,8 @@ const handleMouseDown = (e) => {
 };
 
 const handleMouseUp = e => {
-  console.log('handleMouseUp');
   const _tracking = { ...$tracking };
   $tracking = null;
-  console.log('$tracking', $tracking);
-  console.log('_tracking', _tracking);
   handleCanvasSwatchEvent(e, _tracking);
 };
 </script>
