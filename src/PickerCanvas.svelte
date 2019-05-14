@@ -9,31 +9,11 @@ import {
   width,
   height
 } from "./picker-canvas-store.js";
-import { picking, swatches } from './store';
-import hexToRgb from './lib/hex-to-rgb.js';
-import rgbToHex from './lib/rgb-to-hex.js';
-import rgbStringToComponents from './lib/rgb-string-to-components.js';
+import { picking, swatches, pickingSwatchRgb } from './store';
+import Cursor from './Cursor.svelte';
 
 let mounted;
 let elements, contexts;
-
-const getSwatch = () => {
-  return ($picking === null) ? null : $swatches[$picking];
-};
-
-const getSwatchRgb = () => {
-  var swatchRgb;
-  const swatch = getSwatch();
-  if (!swatch) return;
-  if (swatch.value.startsWith('#')) {
-    swatchRgb = hexToRgb(swatch.value);
-  } else if (swatch.value.startsWith('rgb')) {
-    swatchRgb = rgbStringToComponents(swatch.value);
-  } else {
-    console.warning('unexpected value for swatch', swatch);
-  }
-  return swatchRgb;
-};
 
 const rgb = { R: 0, G: 0, B: 0 };
 const primaryVsPinnedThreshold = 0.65;
@@ -86,7 +66,7 @@ const renderPinnedCanvasSize = () => {
 
 const render = state => {
   if (!elements || !contexts || !state.width || !state.height) return;
-  const swatchRgb = getSwatchRgb();
+  const swatchRgb = $pickingSwatchRgb;
   renderCanvasSize();
   renderPrimaryCanvasSize();
   renderPinnedCanvasSize();
@@ -221,7 +201,7 @@ onDestroy(() => {
 </script>
 
 <style>
-canvas {
+.picker-canvas {
   --golden-ratio: 1.618;
   --side: calc((1 / var(--golden-ratio)) * 100%);
   --margin: calc((100% - var(--side)) / 2);
@@ -233,12 +213,24 @@ canvas {
   top: var(--margin);
   width: var(--side);
 }
+canvas {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
 </style>
 
-<canvas
-  bind:this={mounted}
-  bind:clientWidth={$width}
-  bind:clientHeight={$height}
-  on:click={rotatePinned}
->
-</canvas>
+<div class="picker-canvas">
+  <canvas
+    bind:this={mounted}
+    bind:clientWidth={$width}
+    bind:clientHeight={$height}
+    on:click={rotatePinned}
+  >
+  </canvas>
+  <Cursor left={50} top={50} />
+</div>
