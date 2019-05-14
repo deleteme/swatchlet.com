@@ -1,6 +1,6 @@
 <script>
 import { onMount, onDestroy } from "svelte";
-import { derived } from 'svelte/store';
+import { derived } from "svelte/store";
 import {
   canvasState,
   COLOR_MODEL_RGB,
@@ -10,15 +10,18 @@ import {
   width,
   height
 } from "./picker-canvas-store.js";
-import rgbToHex from './lib/rgb-to-hex.js';
-import { picking, swatches, pickingSwatchRgb } from './store';
-import PrimaryCursor from './PrimaryCursor.svelte';
-import PinnedCursor from './PinnedCursor.svelte';
+import rgbToHex from "./lib/rgb-to-hex.js";
+import { picking, swatches, pickingSwatchRgb } from "./store";
+import PrimaryCursor from "./PrimaryCursor.svelte";
+import PinnedCursor from "./PinnedCursor.svelte";
 
 let mounted;
 let elements, contexts;
-let cursorLeft = 0, cursorTop = 0;
-let pinnedCursorLeft = 0, pinnedCursorTop = 0, pinnedCursorWidth = 10;
+let cursorLeft = 0,
+  cursorTop = 0;
+let pinnedCursorLeft = 0,
+  pinnedCursorTop = 0,
+  pinnedCursorWidth = 10;
 
 const rgb = { R: 0, G: 0, B: 0 };
 const primaryVsPinnedThreshold = 0.65;
@@ -135,11 +138,13 @@ const render = state => {
       Math.floor(primaryHeight * yScale)
     );
 
-    cursorLeft = Math.floor(swatchRgb[xAxis] * xScale * primaryVsPinnedThreshold);
+    cursorLeft = Math.floor(
+      swatchRgb[xAxis] * xScale * primaryVsPinnedThreshold
+    );
     cursorTop = Math.floor(swatchRgb[yAxis] * yScale);
   })();
 
-  (function renderPinnedCanvas(){
+  (function renderPinnedCanvas() {
     var y = 0;
     const [pinnedWidth, pinnedHeight] = getPinnedImageDataDimensions();
     const imageData = contexts.pinned.createImageData(
@@ -150,7 +155,7 @@ const render = state => {
     const yScale = state.height / pinnedHeight;
     const [buf, buf8, data] = getBuffers(pinnedWidth, pinnedHeight);
     // create a gradient from one to 255
-    const others = COLOR_MODEL_RGB.replace(state.pinned, '').split('');
+    const others = COLOR_MODEL_RGB.replace(state.pinned, "").split("");
     // others will be something like ['R', 'G']
     rgb[others[0]] = swatchRgb[others[0]];
     rgb[others[1]] = swatchRgb[others[1]];
@@ -194,14 +199,14 @@ onMount(() => {
     pinned: elements.pinned.getContext("2d")
   };
 
-  const canvasStateWithSwatch = derived([canvasState, pickingSwatchRgb], ([
-    canvasState, pickingSwatchRgb
-  ]) => {
+  const canvasStateWithSwatch = derived(
+    [canvasState, pickingSwatchRgb],
+    ([canvasState, pickingSwatchRgb]) => {
       return { ...canvasState, pickingSwatchRgb };
-  });
+    }
+  );
   unsubscribe = canvasStateWithSwatch.subscribe(render);
 });
-
 
 onDestroy(() => {
   unsubscribe();
@@ -210,7 +215,7 @@ onDestroy(() => {
 });
 
 const handleCanvasClick = e => {
-  const isPrimaryCanvas = e.layerX < ($width * primaryVsPinnedThreshold);
+  const isPrimaryCanvas = e.layerX < $width * primaryVsPinnedThreshold;
   const _rgb = { R: 0, G: 0, B: 0 };
   // translate a click into an rgb value
   if (isPrimaryCanvas) {
