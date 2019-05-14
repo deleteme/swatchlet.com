@@ -268,9 +268,11 @@ const handleMouseDown = (e) => {
 };
 
 const handleMouseUp = e => {
-  const _tracking = { ...$tracking };
-  $tracking = null;
-  handleCanvasSwatchEvent(e, _tracking);
+  if ($tracking) {
+    const _tracking = { ...$tracking };
+    $tracking = null;
+    handleCanvasSwatchEvent(e, _tracking);
+  }
 };
 </script>
 
@@ -306,6 +308,10 @@ canvas {
     on:mousedown={handleMouseDown}
     on:mouseup={handleMouseUp}
     on:mousemove={handleMouseMove}
+    on:touchstart={handleMouseDown}
+    on:touchend={handleMouseUp}
+    on:touchcancel={handleMouseUp}
+    on:touchmove|preventDefault={handleMouseMove}
   >
   </canvas>
   <PrimaryCursor left={cursorLeft} top={cursorTop} />
