@@ -14,6 +14,7 @@ import Cursor from './Cursor.svelte';
 
 let mounted;
 let elements, contexts;
+let cursorLeft = 0, cursorTop = 0;
 
 const rgb = { R: 0, G: 0, B: 0 };
 const primaryVsPinnedThreshold = 0.65;
@@ -129,6 +130,9 @@ const render = state => {
       Math.floor(primaryWidth * xScale * primaryVsPinnedThreshold),
       Math.floor(primaryHeight * yScale)
     );
+
+    cursorLeft = Math.floor(swatchRgb[xAxis] * xScale * primaryVsPinnedThreshold);
+    cursorTop = Math.floor(swatchRgb[yAxis] * yScale);
   })();
 
   (function renderPinnedCanvas(){
@@ -232,5 +236,5 @@ canvas {
     on:click={rotatePinned}
   >
   </canvas>
-  <Cursor left={50} top={50} />
+  <Cursor left={cursorLeft} top={cursorTop} />
 </div>
