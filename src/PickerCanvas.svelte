@@ -1,5 +1,6 @@
 <script>
 import { onMount, onDestroy } from "svelte";
+import { derived } from 'svelte/store';
 import {
   canvasState,
   COLOR_MODEL_RGB,
@@ -9,6 +10,7 @@ import {
   width,
   height
 } from "./picker-canvas-store.js";
+import rgbToHex from './lib/rgb-to-hex.js';
 import { picking, swatches, pickingSwatchRgb } from './store';
 import PrimaryCursor from './PrimaryCursor.svelte';
 import PinnedCursor from './PinnedCursor.svelte';
@@ -69,7 +71,7 @@ const renderPinnedCanvasSize = () => {
 
 const render = state => {
   if (!elements || !contexts || !state.width || !state.height) return;
-  const swatchRgb = $pickingSwatchRgb;
+  const swatchRgb = state.pickingSwatchRgb;
   renderCanvasSize();
   renderPrimaryCanvasSize();
   renderPinnedCanvasSize();
@@ -178,13 +180,6 @@ const render = state => {
   })();
 };
 
-const rotatePinned = () => {
-  const index = COLOR_MODEL_RGB.indexOf($pinned);
-  let newIndex = index + 1;
-  if (!COLOR_MODEL_RGB[newIndex]) newIndex = 0;
-  $pinned = COLOR_MODEL_RGB[newIndex];
-};
-
 let unsubscribe;
 
 onMount(() => {
@@ -199,7 +194,12 @@ onMount(() => {
     pinned: elements.pinned.getContext("2d")
   };
 
-  unsubscribe = canvasState.subscribe(render);
+  const canvasStateWithSwatch = derived([canvasState, pickingSwatchRgb], ([
+    canvasState, pickingSwatchRgb
+  ]) => {
+      return { ...canvasState, pickingSwatchRgb };
+  });
+  unsubscribe = canvasStateWithSwatch.subscribe(render);
 });
 
 
@@ -208,6 +208,37 @@ onDestroy(() => {
   elements = null;
   contexts = null;
 });
+
+const handleCanvasClick = e => {
+  const isPrimaryCanvas = e.layerX < ($width * primaryVsPinnedThreshold);
+  const _rgb = { R: 0, G: 0, B: 0 };
+  // translate a click into an rgb value
+  if (isPrimaryCanvas) {
+    const [xAxis, yAxis] = getAxisFromPinned();
+    let primaryXMax = RANGES[xAxis][1]; // 255
+    let primaryYMax = RANGES[yAxis][1]; // 255
+    let primaryPxWidth = $width * primaryVsPinnedThreshold;
+    let primaryPxHeight = $height;
+    // how far along into the primary canvas?
+    let xTargetRatio = e.layerX / primaryPxWidth; // 0.3
+    let xTargetComponentValue = Math.round(xTargetRatio * primaryXMax);
+    _rgb[xAxis] = xTargetComponentValue;
+    let yTargetRatio = e.layerY / primaryPxHeight; // 0.4
+    let yTargetComponentValue = Math.round(yTargetRatio * primaryYMax);
+    _rgb[yAxis] = yTargetComponentValue;
+    $swatches = $swatches.map((swatch, i) => {
+      if (i === $picking) {
+        _rgb[$pinned] = $pickingSwatchRgb[$pinned];
+        let newValue = rgbToHex(_rgb.R, _rgb.G, _rgb.B);
+        return { ...swatch, value: newValue };
+      } else {
+        return swatch;
+      }
+    });
+  } else {
+    // it's pinned canvas
+  }
+};
 </script>
 
 <style>
@@ -239,7 +270,7 @@ canvas {
     bind:this={mounted}
     bind:clientWidth={$width}
     bind:clientHeight={$height}
-    on:click={rotatePinned}
+    on:click={handleCanvasClick}
   >
   </canvas>
   <PrimaryCursor left={cursorLeft} top={cursorTop} />
