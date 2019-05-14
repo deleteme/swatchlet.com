@@ -8,7 +8,8 @@ import {
   pinned,
   colorModel,
   width,
-  height
+  height,
+  tracking
 } from "./picker-canvas-store.js";
 import rgbToHex from "./lib/rgb-to-hex.js";
 import { picking, swatches, pickingSwatchRgb } from "./store";
@@ -214,8 +215,12 @@ onDestroy(() => {
   contexts = null;
 });
 
-const handleCanvasClick = e => {
-  const isPrimaryCanvas = e.layerX < $width * primaryVsPinnedThreshold;
+const getIsPrimaryCanvasEvent = e => {
+  return e.layerX < $width * primaryVsPinnedThreshold;
+};
+
+const handleCanvasSwatchEvent = (e, { isPrimaryCanvas }) => {
+  console.log('handleCanvasSwatchEvent', { isPrimaryCanvas });
   const _rgb = { ...$pickingSwatchRgb };
   // translate a click into an rgb value
   if (isPrimaryCanvas) {
@@ -240,11 +245,38 @@ const handleCanvasClick = e => {
       pinnedYMax - Math.round(yTargetRatio * pinnedYMax);
     _rgb[$pinned] = yTargetComponentValue;
   }
+  console.log('old swatches', $swatches);
   $swatches = $swatches.map((swatch, i) =>
     i === $picking
       ? { ...swatch, value: rgbToHex(_rgb.R, _rgb.G, _rgb.B) }
       : swatch
   );
+  console.log('new swatches', $swatches);
+}
+
+const handleCanvasClick = e => {
+  const isPrimaryCanvas = getIsPrimaryCanvasEvent(e);
+  handleCanvasSwatchEvent(e, { isPrimaryCanvas });
+};
+
+const handleMouseMove = e => {
+  if ($tracking) {
+    handleCanvasSwatchEvent(e, $tracking);
+  }
+};
+
+const handleMouseDown = (e) => {
+  const isPrimaryCanvas = getIsPrimaryCanvasEvent(e);
+  $tracking = { isPrimaryCanvas };
+};
+
+const handleMouseUp = e => {
+  console.log('handleMouseUp');
+  const _tracking = { ...$tracking };
+  $tracking = null;
+  console.log('$tracking', $tracking);
+  console.log('_tracking', _tracking);
+  handleCanvasSwatchEvent(e, _tracking);
 };
 </script>
 
@@ -277,7 +309,9 @@ canvas {
     bind:this={mounted}
     bind:clientWidth={$width}
     bind:clientHeight={$height}
-    on:click={handleCanvasClick}
+    on:mousedown={handleMouseDown}
+    on:mouseup={handleMouseUp}
+    on:mousemove={handleMouseMove}
   >
   </canvas>
   <PrimaryCursor left={cursorLeft} top={cursorTop} />

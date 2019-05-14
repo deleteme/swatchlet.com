@@ -24,3 +24,5 @@ export const canvasState = derived(
     return { pinned, colorModel, width, height };
   }
 );
+
+export const tracking = writable(null);

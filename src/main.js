@@ -3,6 +3,8 @@ import App from './App.svelte';
 import { name, swatches } from './store.js';
 import { parseURL, toString, renderHash } from './url-helpers.js';
 import { memoize } from './memoize.js';
+import { tracking } from './picker-canvas-store.js';
+import throttle from 'lodash.throttle';
 
 const syncURLtoState = memoize(function _syncURLtoState(url) {
   const newState = parseURL(url);
@@ -27,9 +29,17 @@ const derivedLocationHash = derived([name, swatches], ([$name, $swatches]) => {
   });
 });
 
-derivedLocationHash.subscribe(hash => {
-  location.hash = hash;
-});
+const handleDerivedLocationHash = throttle(
+  hash => {
+    if (hash !== location.hash) {
+      location.hash = hash;
+    }
+  },
+  1000,
+  { leading: true, trailing: true }
+);
+
+derivedLocationHash.subscribe(handleDerivedLocationHash);
 
 const handleHashChange = e => {
   syncURLtoState(e.newURL);

@@ -26,5 +26,7 @@
     "start": "sirv public",
     "start:dev": "sirv public --dev"
   },
-  "dependencies": {}
+  "dependencies": {
+    "lodash.throttle": "^4.1.1"
+  }
 }
