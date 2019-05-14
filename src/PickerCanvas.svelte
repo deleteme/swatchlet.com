@@ -73,7 +73,7 @@ const renderPinnedCanvasSize = () => {
 };
 
 const render = state => {
-  if (!elements || !contexts || !state.width || !state.height) return;
+  if (!elements || !contexts || !state.width || !state.height || !state.pickingSwatchRgb) return;
   const swatchRgb = state.pickingSwatchRgb;
   renderCanvasSize();
   renderPrimaryCanvasSize();
@@ -216,7 +216,7 @@ onDestroy(() => {
 
 const handleCanvasClick = e => {
   const isPrimaryCanvas = e.layerX < $width * primaryVsPinnedThreshold;
-  const _rgb = { R: 0, G: 0, B: 0 };
+  const _rgb = { ...$pickingSwatchRgb };
   // translate a click into an rgb value
   if (isPrimaryCanvas) {
     const [xAxis, yAxis] = getAxisFromPinned();
@@ -231,18 +231,20 @@ const handleCanvasClick = e => {
     let yTargetRatio = e.layerY / primaryPxHeight; // 0.4
     let yTargetComponentValue = Math.round(yTargetRatio * primaryYMax);
     _rgb[yAxis] = yTargetComponentValue;
-    $swatches = $swatches.map((swatch, i) => {
-      if (i === $picking) {
-        _rgb[$pinned] = $pickingSwatchRgb[$pinned];
-        let newValue = rgbToHex(_rgb.R, _rgb.G, _rgb.B);
-        return { ...swatch, value: newValue };
-      } else {
-        return swatch;
-      }
-    });
   } else {
     // it's pinned canvas
+    let pinnedPxHeight = $height;
+    let pinnedYMax = RANGES[$pinned][1]; // 255
+    let yTargetRatio = e.layerY / pinnedPxHeight; // 0.4
+    let yTargetComponentValue =
+      pinnedYMax - Math.round(yTargetRatio * pinnedYMax);
+    _rgb[$pinned] = yTargetComponentValue;
   }
+  $swatches = $swatches.map((swatch, i) =>
+    i === $picking
+      ? { ...swatch, value: rgbToHex(_rgb.R, _rgb.G, _rgb.B) }
+      : swatch
+  );
 };
 </script>
 
