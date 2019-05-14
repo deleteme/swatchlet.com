@@ -7,11 +7,13 @@
 .pinned-cursor {
   background: none;
   border: 3px solid white;
-  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
-  height: 5px;
+  border-radius: 3px;
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.7);
+  box-sizing: border-box;
+  height: 7px;
   position: absolute;
   pointer-events: none;
-  transform: translateY(-3px);
+  transform: translateX(-3px) translateY(-3px);
 }
 </style>
-<div class="pinned-cursor" style="left: {left}px; top: {top}px; width: {width}px;"></div>
+<div class="pinned-cursor" style="left: {left}px; top: {top}px; width: {width + (3 * 2)}px;"></div>
