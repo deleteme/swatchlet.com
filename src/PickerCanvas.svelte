@@ -10,11 +10,13 @@ import {
   height
 } from "./picker-canvas-store.js";
 import { picking, swatches, pickingSwatchRgb } from './store';
-import Cursor from './Cursor.svelte';
+import PrimaryCursor from './PrimaryCursor.svelte';
+import PinnedCursor from './PinnedCursor.svelte';
 
 let mounted;
 let elements, contexts;
 let cursorLeft = 0, cursorTop = 0;
+let pinnedCursorLeft = 0, pinnedCursorTop = 0, pinnedCursorWidth = 10;
 
 const rgb = { R: 0, G: 0, B: 0 };
 const primaryVsPinnedThreshold = 0.65;
@@ -169,6 +171,10 @@ const render = state => {
       Math.ceil($width * (1 - primaryVsPinnedThreshold)),
       Math.floor(pinnedHeight * yScale)
     );
+
+    pinnedCursorLeft = Math.floor($width * primaryVsPinnedThreshold);
+    pinnedCursorWidth = Math.ceil($width * (1 - primaryVsPinnedThreshold));
+    pinnedCursorTop = (RANGES[$pinned][1] - swatchRgb[$pinned]) * yScale;
   })();
 };
 
@@ -236,5 +242,6 @@ canvas {
     on:click={rotatePinned}
   >
   </canvas>
-  <Cursor left={cursorLeft} top={cursorTop} />
+  <PrimaryCursor left={cursorLeft} top={cursorTop} />
+  <PinnedCursor left={pinnedCursorLeft} top={pinnedCursorTop} width={pinnedCursorWidth} />
 </div>
