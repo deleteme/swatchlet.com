@@ -15,7 +15,7 @@
     "rollup-plugin-svelte": "^5.0.3",
     "rollup-plugin-terser": "^4.0.4",
     "sirv-cli": "^0.4.2",
-    "svelte": "^3.2.2"
+    "svelte": "^3.3.0"
   },
   "scripts": {
     "prettier": "prettier --write --single-quote \"./*.js\" \"src/**/*.js\"",
