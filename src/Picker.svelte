@@ -14,6 +14,7 @@
   position: relative;
   width: 100%;
   transition: background 0.2s;
+  user-select: none;
 }
 .picker.tracking {
   transition: none;
