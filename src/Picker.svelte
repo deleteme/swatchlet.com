@@ -5,7 +5,10 @@
   import { picking, swatches, cancelPicking } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
-  $: document.documentElement.style.background = $swatches[$picking] ? $swatches[$picking].value : 'white';
+  import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
+  $: backgroundColor = $swatches[$picking] ? $swatches[$picking].value : '#ffffff';
+  $: document.documentElement.style.background = backgroundColor;
+  $: contrastingColor = getHighContrastColorFromHex(backgroundColor);
 </script>
 
 <style>
@@ -34,7 +37,7 @@ strong {
 }
 </style>
 
-<div class="picker" class:tracking={$tracking} style='background: {$swatches[$picking].value}'>
+<div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor}'>
   <strong>{$swatches[$picking].value}</strong>
   <ActionBar>
     <Button on:click={cancelPicking}>Close</Button>

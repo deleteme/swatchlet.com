@@ -14,14 +14,14 @@ describe('isLightColor()', () => {
   });
 });
 describe('getHighContrastColorFromRGB()', () => {
-  it('should return white if given a darker color.', () => {
-    expect(getHighContrastColorFromRGB({ R: 1, G: 2, B: 3 })).toBe('white');
-    expect(getHighContrastColorFromRGB({ R: 122, G: 2, B: 3 })).toBe('white');
+  it('should return #FFF if given a darker color.', () => {
+    expect(getHighContrastColorFromRGB({ R: 1, G: 2, B: 3 })).toBe('#FFF');
+    expect(getHighContrastColorFromRGB({ R: 122, G: 2, B: 3 })).toBe('#FFF');
   });
-  it('should return black if given a lighter color.', () => {
-    expect(getHighContrastColorFromRGB({ R: 1, G: 255, B: 223 })).toBe('black');
+  it('should return #000 if given a lighter color.', () => {
+    expect(getHighContrastColorFromRGB({ R: 1, G: 255, B: 223 })).toBe('#000');
     expect(getHighContrastColorFromRGB({ R: 122, G: 233, B: 211 })).toBe(
-      'black'
+      '#000'
     );
   });
 });

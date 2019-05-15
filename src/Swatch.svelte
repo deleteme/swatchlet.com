@@ -4,10 +4,19 @@
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
   import { pick, swatches, name } from './store.js';
+  import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   export let i;
   export let value;
   let swatchName;
   export { swatchName as name };
+  const safe = (fn, fallback) => {
+    try {
+      const v = fn();
+      return v;
+    } catch (e) {
+      return fallback;
+    }
+  };
   $: edit = (value, i) => {
     location.hash = renderHash({
       name: $name,
@@ -22,6 +31,7 @@
       return i !== j;
     })
   });
+  $: contrastingColor = safe(() => getHighContrastColorFromHex(value), '#000');
 </script>
 
 <style>
@@ -57,12 +67,12 @@ input {
 }
 </style>
 
-<div class="swatch" style='background-color: {value};'>
+<div class="swatch" style='background-color: {value}; color: {contrastingColor}'>
   <input
     type="text"
     bind:value={value}
     on:change={() => edit(value, i)}
-    style='font-size: calc(100vw / {$swatches.length} * 0.2);'
+    style='font-size: calc(100vw / {$swatches.length} * 0.2); color: { contrastingColor }'
   />
   <ActionBar>
     {swatchName}
