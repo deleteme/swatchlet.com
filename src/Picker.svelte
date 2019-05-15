@@ -4,6 +4,7 @@
   import PickerCanvas from './PickerCanvas.svelte';
   import { picking, swatches, cancelPicking } from './store.js';
   import PinnedRadios from './PinnedRadios.svelte';
+  $: document.documentElement.style.background = $swatches[$picking] ? $swatches[$picking].value : 'white';
 </script>
 
 <style>
