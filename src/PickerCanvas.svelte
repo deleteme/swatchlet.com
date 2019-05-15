@@ -299,6 +299,20 @@ const handleWindowResize = () => {
   top: var(--margin);
   width: var(--side);
 }
+@media screen and (min-width: 0) and (max-width: 812px) {
+  .picker-canvas {
+    --golden-ratio: 1.618;
+    --side: calc((1 / var(--golden-ratio)) * 100%);
+    --margin: calc((100% - var(--side)) / 2);
+    bottom: 0;
+    height: calc(var(--side) + var(--margin));
+    left: 0;
+    right: var(--margin);
+    position: absolute;
+    top: var(--margin);
+    width: calc(var(--side) + var(--margin));
+  }
+}
 canvas {
   bottom: 0;
   left: 0;
