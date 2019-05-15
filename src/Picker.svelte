@@ -11,6 +11,7 @@
   height: 100%;
   position: relative;
   width: 100%;
+  transition: background 0.2s;
 }
 .picker:hover :global(.actions) {
   display: flex;
