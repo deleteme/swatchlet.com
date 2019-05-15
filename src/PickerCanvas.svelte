@@ -229,26 +229,28 @@ const handleCanvasSwatchEvent = (e, { isPrimaryCanvas }) => {
     let primaryPxWidth = $width * primaryVsPinnedThreshold;
     let primaryPxHeight = $height;
     // how far along into the primary canvas?
-    let xTargetRatio = e.layerX / primaryPxWidth; // 0.3
+    let xTargetRatio = Math.min(e.layerX / primaryPxWidth, 1); // 0.3
     let xTargetComponentValue = Math.round(xTargetRatio * primaryXMax);
     _rgb[xAxis] = xTargetComponentValue;
-    let yTargetRatio = e.layerY / primaryPxHeight; // 0.4
+    let yTargetRatio = Math.min(e.layerY / primaryPxHeight, 1); // 0.4
     let yTargetComponentValue = Math.round(yTargetRatio * primaryYMax);
     _rgb[yAxis] = yTargetComponentValue;
   } else {
     // it's pinned canvas
     let pinnedPxHeight = $height;
     let pinnedYMax = RANGES[$pinned][1]; // 255
-    let yTargetRatio = e.layerY / pinnedPxHeight; // 0.4
+    let yTargetRatio = Math.min(e.layerY / pinnedPxHeight, 1); // 0.4
     let yTargetComponentValue =
       pinnedYMax - Math.round(yTargetRatio * pinnedYMax);
     _rgb[$pinned] = yTargetComponentValue;
   }
-  $swatches = $swatches.map((swatch, i) =>
-    i === $picking
-      ? { ...swatch, value: rgbToHex(_rgb.R, _rgb.G, _rgb.B) }
-      : swatch
-  );
+  $swatches = $swatches.map((swatch, i) => {
+    if (i === $picking) {
+      return { ...swatch, value: rgbToHex(_rgb.R, _rgb.G, _rgb.B) }
+    } else {
+      return swatch;
+    }
+  });
 }
 
 const handleCanvasClick = e => {
