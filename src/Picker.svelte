@@ -6,6 +6,7 @@
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
+  import Modal from './Modal.svelte';
   $: backgroundColor = $swatches[$picking] ? $swatches[$picking].value : '#ffffff';
   $: document.documentElement.style.background = backgroundColor;
   $: contrastingColor = getHighContrastColorFromHex(backgroundColor);
@@ -37,11 +38,13 @@ strong {
 }
 </style>
 
-<div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor}'>
-  <strong>{$swatches[$picking].value}</strong>
-  <ActionBar>
-    <Button on:click={cancelPicking}>Close</Button>
-  </ActionBar>
-  <PinnedRadios />
-  <PickerCanvas />
-</div>
+<Modal>
+  <div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor}'>
+    <strong>{$swatches[$picking].value}</strong>
+    <ActionBar>
+      <Button on:click={cancelPicking}>Close</Button>
+    </ActionBar>
+    <PinnedRadios />
+    <PickerCanvas />
+  </div>
+</Modal>
