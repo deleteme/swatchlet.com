@@ -19,17 +19,25 @@
 .picker.tracking {
   transition: none;
 }
-.picker:hover :global(.actions) {
+.picker :global(.actions) {
   display: flex;
   justify-content: flex-end;
+  right: 45px;
+  width: 33%;
   z-index: 1;
+}
+strong {
+  font-size: 4vh;
+  left: 45px;
+  position: absolute;
+  top: 45px;
 }
 </style>
 
 <div class="picker" class:tracking={$tracking} style='background: {$swatches[$picking].value}'>
+  <strong>{$swatches[$picking].value}</strong>
   <ActionBar>
-    Picking: {$swatches[$picking].name}
-    <Button on:click={cancelPicking}>X</Button>
+    <Button on:click={cancelPicking}>Close</Button>
   </ActionBar>
   <PinnedRadios />
   <PickerCanvas />
