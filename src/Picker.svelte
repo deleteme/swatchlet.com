@@ -3,6 +3,7 @@
   import Button from './Button.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
   import { picking, swatches, cancelPicking } from './store.js';
+  import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   $: document.documentElement.style.background = $swatches[$picking] ? $swatches[$picking].value : 'white';
 </script>
@@ -14,6 +15,9 @@
   width: 100%;
   transition: background 0.2s;
 }
+.picker.tracking {
+  transition: none;
+}
 .picker:hover :global(.actions) {
   display: flex;
   justify-content: flex-end;
@@ -21,7 +25,7 @@
 }
 </style>
 
-<div class="picker" style='background: {$swatches[$picking].value}'>
+<div class="picker" class:tracking={$tracking} style='background: {$swatches[$picking].value}'>
   <ActionBar>
     Picking: {$swatches[$picking].name}
     <Button on:click={cancelPicking}>X</Button>
