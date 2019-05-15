@@ -276,6 +276,13 @@ const handleMouseUp = e => {
     handleCanvasSwatchEvent(e, _tracking);
   }
 };
+
+const handleWindowResize = () => {
+  if (mounted) {
+    $width = mounted.clientWidth;
+    $height = mounted.clientHeight;
+  }
+};
 </script>
 
 <style>
@@ -302,6 +309,7 @@ canvas {
 }
 </style>
 
+<svelte:window on:resize={handleWindowResize} />
 <div class="picker-canvas">
   <canvas
     bind:this={mounted}
