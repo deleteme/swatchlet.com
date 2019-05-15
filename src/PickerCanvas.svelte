@@ -15,6 +15,7 @@ import rgbToHex from "./lib/rgb-to-hex.js";
 import { picking, swatches, pickingSwatchRgb } from "./store";
 import PrimaryCursor from "./PrimaryCursor.svelte";
 import PinnedCursor from "./PinnedCursor.svelte";
+import trap from './lib/trap.js';
 
 let mounted;
 let elements, contexts;
@@ -229,17 +230,17 @@ const handleCanvasSwatchEvent = (e, { isPrimaryCanvas }) => {
     let primaryPxWidth = $width * primaryVsPinnedThreshold;
     let primaryPxHeight = $height;
     // how far along into the primary canvas?
-    let xTargetRatio = Math.min(e.layerX / primaryPxWidth, 1); // 0.3
+    let xTargetRatio = trap(e.layerX / primaryPxWidth); // 0.3
     let xTargetComponentValue = Math.round(xTargetRatio * primaryXMax);
     _rgb[xAxis] = xTargetComponentValue;
-    let yTargetRatio = Math.min(e.layerY / primaryPxHeight, 1); // 0.4
+    let yTargetRatio = trap(e.layerY / primaryPxHeight); // 0.4
     let yTargetComponentValue = Math.round(yTargetRatio * primaryYMax);
     _rgb[yAxis] = yTargetComponentValue;
   } else {
     // it's pinned canvas
     let pinnedPxHeight = $height;
     let pinnedYMax = RANGES[$pinned][1]; // 255
-    let yTargetRatio = Math.min(e.layerY / pinnedPxHeight, 1); // 0.4
+    let yTargetRatio = trap(e.layerY / pinnedPxHeight); // 0.4
     let yTargetComponentValue =
       pinnedYMax - Math.round(yTargetRatio * pinnedYMax);
     _rgb[$pinned] = yTargetComponentValue;
