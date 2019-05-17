@@ -9,6 +9,7 @@
   export let value;
   let swatchName;
   export { swatchName as name };
+  let isHovering = false;
   const safe = (fn, fallback) => {
     try {
       const v = fn();
@@ -32,16 +33,28 @@
     })
   });
   $: contrastingColor = safe(() => getHighContrastColorFromHex(value), '#000');
+  $: outerBackgroundColor = isHovering ? '' : `background-color: ${value}`;
+  const handleMouseenter = () => isHovering = true;
+  const handleMouseleave = () => isHovering = false;
 </script>
 
 <style>
 .swatch {
+  box-sizing: border-box;
+  /*border: 3px solid;*/
+  /*
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.5s;
+  */
   position: relative;
   width: 100%;
+  border-radius: 3px;
+}
+
+.swatch.swatch-is-hovering:hover {
+  /*border-color: white !important;*/
+  background-color: white;
 }
 
 .swatch:hover :global(.actions) {
@@ -51,6 +64,22 @@
 
 :global(.swatch-action) {
   margin-left: 5px;
+}
+
+.swatch-inner {
+  --gap: 3px;
+  border-radius: 8px;
+  bottom: var(--gap);
+  display: flex;
+  align-items: center;
+  height: calc(100% - var(--gap) * 2);
+  left: var(--gap);
+  margin: 3px;
+  justify-content: center;
+  right: var(--gap);
+  top: var(--gap);
+  transition: background 0.5s;
+  width: calc(100% - var(--gap) * 2);
 }
 
 input {
@@ -67,20 +96,28 @@ input {
 }
 </style>
 
-<div class="swatch" style='background-color: {value}; color: {contrastingColor}'>
-  <input
-    type="text"
-    bind:value={value}
-    on:change={() => edit(value, i)}
-    style='font-size: calc(100vw / {$swatches.length} * 0.2); color: { contrastingColor }'
-  />
-  <ActionBar>
-    {swatchName}
-    <Button on:click={() => pick(i)} type='button' class='swatch-action'>
-      Pick
-    </Button>
-    <ButtonLink href={removeHref} class='swatch-action'>
-      X
-    </ButtonLink>
-  </ActionBar>
+<div
+  class="swatch" class:swatch-is-hovering={isHovering}
+  style='{outerBackgroundColor}; color: {contrastingColor};'
+  on:click={() => pick(i)}
+  on:mouseenter={handleMouseenter}
+  on:mouseleave={handleMouseleave}
+>
+  <div
+    class="swatch-inner"
+    style="background-color: {value};"
+  >
+    <input
+      type="text"
+      bind:value={value}
+      style='font-size: calc(100vw / {$swatches.length} * 0.2); color: { contrastingColor }'
+      on:change={() => edit(value, i)}
+    />
+    <ActionBar>
+      {swatchName}
+      <ButtonLink href={removeHref} class='swatch-action'>
+        Remove
+      </ButtonLink>
+    </ActionBar>
+  </div>
 </div>
