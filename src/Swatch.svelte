@@ -37,6 +37,7 @@
   position: relative;
   width: 100%;
   border-radius: 3px;
+  user-select: none;
 }
 
 .swatch.swatch-is-hovering:hover {
