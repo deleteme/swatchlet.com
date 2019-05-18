@@ -18,14 +18,6 @@
       return fallback;
     }
   };
-  $: edit = (value, i) => {
-    location.hash = renderHash({
-      name: $name,
-      swatches: $swatches.map((swatch, j) => {
-        return i === j ? { value } : swatch
-      })
-    });
-  };
   $: removeHref = renderHash({
     name: $name,
     swatches: $swatches.filter((s, j) => {
@@ -42,19 +34,12 @@
 <style>
 .swatch {
   box-sizing: border-box;
-  /*border: 3px solid;*/
-  /*
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  */
   position: relative;
   width: 100%;
   border-radius: 3px;
 }
 
 .swatch.swatch-is-hovering:hover {
-  /*border-color: white !important;*/
   background-color: white;
 }
 
@@ -68,14 +53,13 @@
 }
 
 .swatch-inner {
-  --gap: 3px;
-  border-radius: 8px;
+  --gap: 0px;
+  border-radius: 0px;
   bottom: var(--gap);
   display: flex;
   align-items: center;
   height: calc(100% - var(--gap) * 2);
   left: var(--gap);
-  margin: 3px;
   justify-content: center;
   right: var(--gap);
   top: var(--gap);
@@ -83,12 +67,9 @@
   width: calc(100% - var(--gap) * 2);
 }
 
-input {
-  background: none;
-  border: 0;
-  border-radius: 5px;
+.value {
+  cursor: default;
   font-weight: bold;
-  height: 40%;
   margin: 0;
   padding: 0;
   position: relative;
@@ -108,12 +89,10 @@ input {
     class="swatch-inner"
     style="background-color: {value};"
   >
-    <input
-      type="text"
-      bind:value={value}
+    <span
+      class="value"
       style='font-size: calc(100vw / {$swatches.length} * 0.2); color: { contrastingColor }'
-      on:change={() => edit(value, i)}
-    />
+    >{value}</span>
     <ActionBar>
       <ButtonLink href={removeHref} class='swatch-action'>
         Remove

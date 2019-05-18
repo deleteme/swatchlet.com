@@ -1,15 +1,34 @@
 <script>
+  import { onMount, onDestroy } from 'svelte';
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
-  import { picking, swatches, cancelPicking } from './store.js';
+  import { picking, swatches, cancelPicking, pickingSwatch } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
+  import isValidHex from './lib/is-valid-hex.js';
   import Modal from './Modal.svelte';
   $: backgroundColor = $swatches[$picking] ? $swatches[$picking].value : '#ffffff';
   $: document.documentElement.style.background = backgroundColor;
   $: contrastingColor = getHighContrastColorFromHex(backgroundColor);
+
+  let value = $pickingSwatch.value;
+
+  $: {
+    if (isValidHex(value) && $pickingSwatch) {
+      $swatches[$picking].value = value;
+    }
+  }
+
+  let unsub = pickingSwatch.subscribe((swatch) => {
+    if (swatch && swatch.value !== value) {
+      value = swatch.value;
+    }
+  });
+  onDestroy(() => {
+    unsub();
+  });
 </script>
 
 <style>
@@ -30,17 +49,32 @@
   width: 33%;
   z-index: 1;
 }
-strong {
+input {
+  background: none;
+  border: 0;
+  border-radius: 0;
   font-size: 4vh;
+  font-weight: bold;
   left: 45px;
+  margin: 0;
+  padding: 0;
   position: absolute;
   top: 45px;
+  width: 6em;
+}
+
+input:hover, input:focus {
+  border-bottom: 3px solid;
 }
 </style>
 
 <Modal>
-  <div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor}'>
-    <strong>{$swatches[$picking].value}</strong>
+  <div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor};'>
+    <input
+      type="text"
+      bind:value={value}
+      style='color: {contrastingColor}; border-color: {contrastingColor};'
+    />
     <ActionBar>
       <Button on:click={cancelPicking}>Close</Button>
     </ActionBar>

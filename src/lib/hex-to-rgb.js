@@ -1,5 +1,5 @@
-const longHex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
-const shortHex = /^#?([a-f\d]{1})([a-f\d]{1})([a-f\d]{1})$/i;
+import { longHex, shortHex } from './constants.js';
+
 export default function hexToRgb(hex) {
   let result = shortHex.exec(hex);
   if (result) {
