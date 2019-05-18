@@ -115,7 +115,6 @@ input {
       on:change={() => edit(value, i)}
     />
     <ActionBar>
-      {swatchName}
       <ButtonLink href={removeHref} class='swatch-action'>
         Remove
       </ButtonLink>
