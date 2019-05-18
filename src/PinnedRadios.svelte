@@ -28,10 +28,12 @@ label {
     top: 120px;
   }
   label {
+    align-items: center;
     display: inline-flex;
     padding-right: 1rem;
   }
   input {
+    margin-bottom: 0;
     margin-right: 0.5rem;
   }
   label * {
