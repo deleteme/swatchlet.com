@@ -1,5 +1,6 @@
 <script>
   import { renderHash } from './url-helpers.js';
+  import { isMobile } from './breakpoint-store.js';
   import ButtonLink from './ButtonLink.svelte';
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
@@ -26,6 +27,7 @@
   });
   $: contrastingColor = safe(() => getHighContrastColorFromHex(value), '#000');
   $: outerBackgroundColor = isHovering ? '' : `background-color: ${value}`;
+  $: valueFontSize = $isMobile ? '10vw' : `calc(100vw / ${$swatches.length} * 0.2)`;
   const handleMouseenter = () => isHovering = true;
   const handleMouseleave = () => isHovering = false;
   const isAnchor = e => e.target.tagName === 'A';
@@ -34,6 +36,8 @@
 <style>
 .swatch {
   box-sizing: border-box;
+  height: 100%;
+  margin: auto;
   position: relative;
   width: 100%;
   border-radius: 3px;
@@ -92,7 +96,7 @@
   >
     <span
       class="value"
-      style='font-size: calc(100vw / {$swatches.length} * 0.2); color: { contrastingColor }'
+      style='font-size: {valueFontSize}; color: { contrastingColor }'
     >{value}</span>
     <ActionBar>
       <ButtonLink href={removeHref} class='swatch-action'>

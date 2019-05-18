@@ -12,6 +12,11 @@
   right: 0;
   top: 40px;
 }
+@media screen and (min-width: 0) and (max-width: 812px) {
+  .swatches {
+    flex-direction: column;
+  }
+}
 </style>
 
 <div class='swatches'>
