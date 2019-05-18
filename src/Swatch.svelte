@@ -36,6 +36,7 @@
   $: outerBackgroundColor = isHovering ? '' : `background-color: ${value}`;
   const handleMouseenter = () => isHovering = true;
   const handleMouseleave = () => isHovering = false;
+  const isAnchor = e => e.target.tagName === 'A';
 </script>
 
 <style>
@@ -99,7 +100,7 @@ input {
 <div
   class="swatch" class:swatch-is-hovering={isHovering}
   style='{outerBackgroundColor}; color: {contrastingColor};'
-  on:click={() => pick(i)}
+  on:click={(e) => { if (!isAnchor(e)) { pick(i) }}}
   on:mouseenter={handleMouseenter}
   on:mouseleave={handleMouseleave}
 >
