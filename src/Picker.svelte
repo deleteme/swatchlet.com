@@ -46,6 +46,7 @@
   display: flex;
   justify-content: flex-end;
   right: 45px;
+  top: 50px;
   width: 33%;
   z-index: 1;
 }

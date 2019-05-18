@@ -5,7 +5,7 @@
   flex-direction: row;
   position: absolute;
   right: 5px;
-  top: 50px;
+  top: 20px;
   width: calc(100% - 5px * 2);
 }
 </style>
