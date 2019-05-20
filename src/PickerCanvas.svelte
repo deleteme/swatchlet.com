@@ -19,8 +19,8 @@ import trap from './lib/trap.js';
 
 let mounted;
 let elements, contexts;
-let cursorLeft = 0,
-  cursorTop = 0;
+let cursorLeft = -1,
+  cursorTop = -1;
 let pinnedCursorLeft = -1,
   pinnedCursorTop = -1,
   pinnedCursorWidth = 10;
@@ -341,7 +341,9 @@ canvas {
     on:touchmove|preventDefault={handleMouseMove}
   >
   </canvas>
-  <PrimaryCursor left={cursorLeft} top={cursorTop} />
+  {#if cursorLeft >= 0 && cursorTop >= 0}
+    <PrimaryCursor left={cursorLeft} top={cursorTop} />
+  {/if}
   {#if pinnedCursorLeft >= 0 && pinnedCursorTop >= 0}
     <PinnedCursor left={pinnedCursorLeft} top={pinnedCursorTop} width={pinnedCursorWidth} />
   {/if}

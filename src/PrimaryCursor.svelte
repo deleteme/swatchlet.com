@@ -1,20 +1,25 @@
 <script>
   import { spring } from 'svelte/motion';
 
-  let coords = spring({ left: 0, top: 0 }, {
+  const initialLeft = -1;
+  const initialTop = -1;
+  let transform = '';
+  export let left = initialLeft;
+  export let top = initialTop;
+  const coords = spring({ left: left, top: top }, {
     stiffness: 0.2,
     damping: 0.8
   });
-  let isUsingDefaults = true;
-  export let left = 0;
-  export let top = 0;
+  $: isUsingDefaults = left === initialLeft || top === initialTop;
+  $: isSettled = $coords.left === left && $coords.top === top;
+  $: initialized = !isUsingDefaults;
 
   $: {
-    if (isUsingDefaults) {
-      coords.set({ left: left, top: top }, { hard: isUsingDefaults, soft: 0 });
-      isUsingDefaults = $coords.left === 0 && $coords.top === 0;
-    } else {
-      coords.set({ left: left, top: top });
+    if (!isUsingDefaults) {
+      if (!isSettled) {
+        coords.set({ left: left, top: top });
+      }
+      transform = `transform: translateX(${$coords.left}px) translateY(${$coords.top}px);`;
     }
   }
 </script>
@@ -35,4 +40,4 @@
   top: var(--offset);
 }
 </style>
-<div class="cursor" style="transform: translateX({$coords.left}px) translateY({$coords.top}px);"></div>
+<div class="cursor" style="{transform}"></div>

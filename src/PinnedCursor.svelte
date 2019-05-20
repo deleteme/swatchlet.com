@@ -1,5 +1,6 @@
 <script>
   import { spring } from 'svelte/motion';
+
   const initialLeft = -1;
   const initialTop = -1;
   let transform = '';
