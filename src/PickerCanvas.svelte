@@ -21,8 +21,8 @@ let mounted;
 let elements, contexts;
 let cursorLeft = 0,
   cursorTop = 0;
-let pinnedCursorLeft = 0,
-  pinnedCursorTop = 0,
+let pinnedCursorLeft = -1,
+  pinnedCursorTop = -1,
   pinnedCursorWidth = 10;
 
 const rgb = { R: 0, G: 0, B: 0 };
@@ -342,5 +342,7 @@ canvas {
   >
   </canvas>
   <PrimaryCursor left={cursorLeft} top={cursorTop} />
-  <PinnedCursor left={pinnedCursorLeft} top={pinnedCursorTop} width={pinnedCursorWidth} />
+  {#if pinnedCursorLeft >= 0 && pinnedCursorTop >= 0}
+    <PinnedCursor left={pinnedCursorLeft} top={pinnedCursorTop} width={pinnedCursorWidth} />
+  {/if}
 </div>

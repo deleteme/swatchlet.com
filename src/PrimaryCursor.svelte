@@ -5,11 +5,17 @@
     stiffness: 0.2,
     damping: 0.8
   });
+  let isUsingDefaults = true;
   export let left = 0;
   export let top = 0;
 
   $: {
-    coords.set({ left: left, top: top });
+    if (isUsingDefaults) {
+      coords.set({ left: left, top: top }, { hard: isUsingDefaults, soft: 0 });
+      isUsingDefaults = $coords.left === 0 && $coords.top === 0;
+    } else {
+      coords.set({ left: left, top: top });
+    }
   }
 </script>
 <style>
