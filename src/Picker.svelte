@@ -9,10 +9,12 @@
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   import isValidHex from './lib/is-valid-hex.js';
   import Modal from './Modal.svelte';
-  $: backgroundColor = $swatches[$picking] ? $swatches[$picking].value : '#ffffff';
-  $: document.documentElement.style.background = backgroundColor;
-  $: contrastingColor = getHighContrastColorFromHex(backgroundColor);
+  $: backgroundColor = $swatches[$picking] && $swatches[$picking].value;
+  $: previousBackgroundColor = $swatches[$picking] ? $swatches[$picking].value : previousBackgroundColor;
+  $: document.documentElement.style.background = backgroundColor || previousBackgroundColor;
+  $: contrastingColor = getHighContrastColorFromHex(backgroundColor || previousBackgroundColor);
 
+  export let width = 0;
   let value = $pickingSwatch.value;
 
   $: {
@@ -69,8 +71,12 @@ input:hover, input:focus {
 }
 </style>
 
-<Modal>
-  <div class="picker" class:tracking={$tracking} style='background: {backgroundColor}; color: {contrastingColor};'>
+<Modal width={width}>
+  <div
+    class="picker"
+    class:tracking={$tracking}
+    style='background: {backgroundColor || previousBackgroundColor}; color: {contrastingColor};'
+  >
     <input
       type="text"
       bind:value={value}

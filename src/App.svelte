@@ -3,6 +3,7 @@ import Swatches from './Swatches.svelte';
 import Header from './Header.svelte';
 import Picker from './Picker.svelte';
 import { picking } from './store.js';
+let width = 0;
 </script>
 
 <style>
@@ -15,11 +16,10 @@ import { picking } from './store.js';
 :global(body) { padding: 0; }
 </style>
 
-<div class="app">
+<div class="app" bind:offsetWidth={width}>
+  <Header />
+  <Swatches />
   {#if typeof $picking === 'number'}
-    <Picker />
-  {:else}
-    <Header />
-    <Swatches />
+    <Picker width={width} />
   {/if}
 </div>

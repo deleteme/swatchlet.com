@@ -42,6 +42,7 @@ label {
 }
 </style>
 
+{#if $pickingSwatchRgb}
 <div>
   <label>
     <input type=radio bind:group={$pinned} value='R'>
@@ -58,3 +59,4 @@ label {
     B: { $pickingSwatchRgb.B }
   </label>
 </div>
+{/if}
