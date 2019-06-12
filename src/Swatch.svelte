@@ -36,6 +36,7 @@
 <style>
 .swatch {
   box-sizing: border-box;
+  display: inline-flex;
   height: 100%;
   margin: auto;
   position: relative;
