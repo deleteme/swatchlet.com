@@ -3,7 +3,7 @@
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
-  import { picking, swatches, cancelPicking, pickingSwatch } from './store.js';
+  import { picking, swatches, cancelPicking, pickingSwatch, hoveringSwatchDimensions } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
@@ -11,10 +11,14 @@
   import Modal from './Modal.svelte';
   $: backgroundColor = $swatches[$picking] && $swatches[$picking].value;
   $: previousBackgroundColor = $swatches[$picking] ? $swatches[$picking].value : previousBackgroundColor;
+  $: background = previousBackgroundColor;
   $: document.documentElement.style.background = backgroundColor || previousBackgroundColor;
   $: contrastingColor = getHighContrastColorFromHex(backgroundColor || previousBackgroundColor);
+  $: originElementDimensions = $hoveringSwatchDimensions;
+  $: previousOriginElementDimensions = originElementDimensions || previousOriginElementDimensions;
 
   export let width = 0;
+  export let height = 0;
   let value = $pickingSwatch.value;
 
   $: {
@@ -71,7 +75,7 @@ input:hover, input:focus {
 }
 </style>
 
-<Modal width={width}>
+<Modal targetWidth={width} targetHeight={height} originElementDimensions={previousOriginElementDimensions} background={background}>
   <div
     class="picker"
     class:tracking={$tracking}

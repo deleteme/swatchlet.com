@@ -4,13 +4,14 @@
   import ButtonLink from './ButtonLink.svelte';
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
-  import { pick, swatches, name } from './store.js';
+  import { pick, swatches, name, hoveringSwatchDimensions, picking } from './store.js';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   export let i;
   export let value;
   let swatchName;
   export { swatchName as name };
   let isHovering = false;
+  const noop = () => {};
   const safe = (fn, fallback) => {
     try {
       const v = fn();
@@ -28,8 +29,30 @@
   $: contrastingColor = safe(() => getHighContrastColorFromHex(value), '#000');
   $: outerBackgroundColor = isHovering ? '' : `background-color: ${value}`;
   $: valueFontSize = $isMobile ? '10vw' : `calc(100vw / ${$swatches.length} * 0.2)`;
-  const handleMouseenter = () => isHovering = true;
-  const handleMouseleave = () => isHovering = false;
+
+  let element;
+
+  const handleMouseenter = () => {
+    if ($picking) return;
+    isHovering = true;
+    let { offsetWidth, offsetHeight, offsetLeft, offsetTop } = element;
+    let parentElement = element.parentElement;
+    while (parentElement) {
+      offsetLeft += parentElement.offsetLeft;
+      offsetTop += parentElement.offsetTop;
+      parentElement = parentElement.parentElement;
+    }
+    $hoveringSwatchDimensions = {
+      offsetWidth, offsetHeight, offsetLeft, offsetTop
+    };
+    //console.log('assigned new hovering swatch dimensions', $hoveringSwatchDimensions);
+  };
+  const handleMouseleave = () => {
+    if ($picking) return;
+    isHovering = false;
+    $hoveringSwatchDimensions = null;
+    //console.log('reset hovering swatch dimensions', $hoveringSwatchDimensions);
+  };
   const isAnchor = e => e.target.tagName === 'A';
 </script>
 
@@ -90,6 +113,7 @@
   on:click={(e) => { if (!isAnchor(e)) { pick(i) }}}
   on:mouseenter={handleMouseenter}
   on:mouseleave={handleMouseleave}
+  bind:this={element}
 >
   <div
     class="swatch-inner"
