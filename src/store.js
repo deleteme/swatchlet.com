@@ -50,4 +50,4 @@ export const pickingSwatchRgb = derived(pickingSwatch, swatch => {
   return swatchRgb;
 });
 
-export const hoveringSwatchDimensions = writable(null)
+export const hoveringSwatchDimensions = writable(null);
