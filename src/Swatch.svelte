@@ -78,7 +78,7 @@
 }
 
 :global(.swatch-action) {
-  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .swatch-inner {
@@ -123,10 +123,12 @@
       class="value"
       style='font-size: {valueFontSize}; color: { contrastingColor }'
     >{value}</span>
-    <ActionBar>
-      <ButtonLink href={removeHref} class='swatch-action'>
-        Remove
-      </ButtonLink>
-    </ActionBar>
+    {#if !$isMobile}
+      <ActionBar>
+        <ButtonLink href={removeHref} class='swatch-action'>
+          Remove
+        </ButtonLink>
+      </ActionBar>
+    {/if}
   </div>
 </div>

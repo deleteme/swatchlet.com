@@ -32,6 +32,7 @@
 <a
   {href}
   class={klass}
+  on:click
 >
   <slot></slot>
 </a>

@@ -2,13 +2,17 @@
   import { onMount, onDestroy } from 'svelte';
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
+  import ButtonLink from './ButtonLink.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
-  import { picking, swatches, cancelPicking, pickingSwatch, hoveringSwatchDimensions } from './store.js';
+  import { name, picking, swatches, cancelPicking, pickingSwatch, hoveringSwatchDimensions } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   import isValidHex from './lib/is-valid-hex.js';
   import Modal from './Modal.svelte';
+  import { renderHash } from './url-helpers.js';
+  import delay from './lib/delay.js';
+
   $: backgroundColor = $swatches[$picking] && $swatches[$picking].value;
   $: previousBackgroundColor = $swatches[$picking] ? $swatches[$picking].value : previousBackgroundColor;
   $: background = previousBackgroundColor;
@@ -27,6 +31,13 @@
     }
   }
 
+  $: removeHref = renderHash({
+    name: $name,
+    swatches: $swatches.filter((s, j) => {
+      return $picking !== j;
+    })
+  });
+
   let unsub = pickingSwatch.subscribe((swatch) => {
     if (swatch && swatch.value !== value) {
       value = swatch.value;
@@ -35,6 +46,16 @@
   onDestroy(() => {
     unsub();
   });
+  const handleRemoveButton = e => {
+    console.log('handleRemoveButton');
+    e.preventDefault();
+    const href = e.target.href;
+    cancelPicking();
+    // long enough for the exit animation
+    delay(251).then(() => {
+      location.href = href;
+    });
+  };
 </script>
 
 <style>
@@ -87,6 +108,9 @@ input:hover, input:focus {
       style='color: {contrastingColor}; border-color: {contrastingColor};'
     />
     <ActionBar>
+      <ButtonLink href={removeHref} class='swatch-action' on:click={handleRemoveButton}>
+        Remove
+      </ButtonLink>
       <Button on:click={cancelPicking}>Close</Button>
     </ActionBar>
     <PinnedRadios />
