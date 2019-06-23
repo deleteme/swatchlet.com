@@ -23,7 +23,7 @@ label {
 }
 @media screen and (min-width: 0) and (max-width: 812px) {
   div {
-    left: 45px;
+    left: 30px;
     position: absolute;
     top: 120px;
   }

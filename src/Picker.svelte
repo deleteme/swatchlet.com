@@ -94,6 +94,15 @@ input {
 input:hover, input:focus {
   border-bottom: 3px solid;
 }
+@media screen and (min-width: 0) and (max-width: 812px) {
+  input {
+    left: 30px;
+  }
+  .picker :global(.actions) {
+    right: 30px;
+    top: 43px;
+  }
+}
 </style>
 
 <Modal targetWidth={width} targetHeight={height} originElementDimensions={previousOriginElementDimensions} background={background}>
