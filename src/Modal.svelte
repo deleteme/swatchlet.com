@@ -1,8 +1,7 @@
 <script>
   import { onMount, onDestroy } from 'svelte';
   import { fly } from 'svelte/transition';
-  import { spring } from 'svelte/motion';
-  import { quintOut } from 'svelte/easing';
+  import * as easing from 'svelte/easing';
   import { cancelPicking } from './store.js';
   const handleKeyUp = e => {
     if (e.code === 'Escape') cancelPicking();
@@ -12,61 +11,57 @@
   export let originElementDimensions;
   export let background = '';
   let dimensions = originElementDimensions;
-  //let isMounted = false;
-  /*
-  target width, height
-  original width, height
+  $: transitionSwatchScale = {
+      duration: 150,
+      position: {
+        start: { x: dimensions.offsetLeft, y: dimensions.offsetTop },
+        end: { x: 0, y: 0 },
+      },
+      origin: {
+        end: { x: 0, y: 0 },
+        start: { x: dimensions.offsetLeft / 2, y: dimensions.offsetTop / 2 },
+      },
+      scale: {
+        start: {
+          x: dimensions.offsetWidth / targetWidth,
+          y: dimensions.offsetHeight / targetHeight
+        },
+        end: { x: 1, y: 1 },
+      }}
+  function renderTransformStyles (s, p, o) {
+    const includeOrigin = false;
+    var styles = `
+      transform: scale(${s.x}, ${s.y}) translate(${p.x}px, ${p.y}px);
+      `.trim();
+    if (includeOrigin) styles += `transform-origin: ${o.x} ${o.y}`;
+    return styles;
+  }
+  function swatchScale(node, { duration, scale, position, origin }) {
+    const css = t => {
+      t = easing.cubicOut(t);
+      const o = {
+        x: (origin.start.x - origin.end.x) * (1 - t),
+        y: (origin.start.y - origin.end.y) * (1 - t)
+      };
+      const s = {
+        x: scale.start.x + (Math.abs(scale.start.x - scale.end.x) * t),
+        y: scale.start.y + (Math.abs(scale.start.y - scale.end.y) * t)
+      };
+      const p = {
+        x: Math.abs((position.end.x - position.start.x) * (1 - t)) / s.x,
+        y: Math.abs((position.end.y - position.start.y) * (1 - t)) / s.y
+      };
+      return renderTransformStyles(s, p, o);
+    };
+    return { duration, css };
+  }
 
-  original * scale = target
-  original = target / scale
-  target = original * scale
-  target / original = scale
-  */
-  const position = spring({
-    x: dimensions.offsetLeft,
-    y: dimensions.offsetTop
-  }, { damping: 0.8, stiffness: 0.15 });
-
-  const scale = spring(
-    { x: 1, y: 1 },
-    { damping: 0.8, stiffness: 0.15 }
-  );
-  const scaleLag = 50;
-  const origin = spring(
-    { x: dimensions.offsetWidth, y: dimensions.offsetHeight },
-    { damping: 0.8, stiffness: 0.15 }
-  );
-  //let flyDelayFinished = false;
   $: overlayStyle = [
-      `left: ${0}px`,
-      `top: ${0}px`,
-      `width: ${dimensions.offsetWidth}px`,
-      `height: ${dimensions.offsetHeight}px`,
-      `transform: scale(${$scale.x}, ${$scale.y}) translate(${$position.x}px, ${$position.y}px)`,
-      `transform-origin: ${$origin.x}px ${$origin.y}px`
+      `left: 0px`,
+      `top: 0px`,
+      `width:  ${targetWidth}px`,
+      `height: ${targetHeight}px`,
     ].join('; ')
-  //let timeout;
-  onMount(() => {
-    $position = { x: 0, y: 0 };
-    $origin = { x: 0, y: 0 };
-    $scale = {
-      // scale: target / original
-      x: targetWidth / dimensions.offsetWidth,
-      y: targetHeight / dimensions.offsetHeight
-    }
-    /*
-    timeout = setTimeout(() => {
-      flyDelayFinished = true;
-    }, 200 + 170);
-    isMounted = true;
-    */
-  });
-  /*
-  onDestroy(() => {
-    clearTimeout(timeout);
-    isMounted = false;
-  });
-  */
 </script>
 <style>
 .modal {
@@ -77,7 +72,7 @@
 }
 .overlay {
   position: absolute;
-  transform-origin: top left;
+  transform-origin: 0px 0px;
   z-index: 1;
 }
 .overlay-overflow {
@@ -93,11 +88,13 @@
   <div
     style="{ overlayStyle }; background: { background }"
     class="overlay"
+    transition:swatchScale|local="{transitionSwatchScale}"
   >
   </div>
   <div
     class="modal"
-    transition:fly="{{delay: 100, duration: 200, x: targetWidth / 10, y: 0, opacity: 0, easing: quintOut}}"
+    in:fly|local="{{delay: 100, duration: 200, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut}}"
+    out:fly|local="{{delay: 0, duration: 100, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut}}"
   >
     <slot></slot>
   </div>
