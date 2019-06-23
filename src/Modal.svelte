@@ -1,5 +1,4 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
   import { fly } from 'svelte/transition';
   import * as easing from 'svelte/easing';
   import { cancelPicking } from './store.js';
@@ -12,14 +11,9 @@
   export let background = '';
   let dimensions = originElementDimensions;
   $: transitionSwatchScale = {
-      duration: 150,
       position: {
         start: { x: dimensions.offsetLeft, y: dimensions.offsetTop },
         end: { x: 0, y: 0 },
-      },
-      origin: {
-        end: { x: 0, y: 0 },
-        start: { x: dimensions.offsetLeft / 2, y: dimensions.offsetTop / 2 },
       },
       scale: {
         start: {
@@ -28,21 +22,15 @@
         },
         end: { x: 1, y: 1 },
       }}
-  function renderTransformStyles (s, p, o) {
-    const includeOrigin = false;
-    var styles = `
+  function renderTransformStyles (s, p) {
+    const styles = `
       transform: scale(${s.x}, ${s.y}) translate(${p.x}px, ${p.y}px);
       `.trim();
-    if (includeOrigin) styles += `transform-origin: ${o.x} ${o.y}`;
     return styles;
   }
-  function swatchScale(node, { duration, scale, position, origin }) {
+  function swatchScale(node, { duration, scale, position }) {
     const css = t => {
       t = easing.cubicOut(t);
-      const o = {
-        x: (origin.start.x - origin.end.x) * (1 - t),
-        y: (origin.start.y - origin.end.y) * (1 - t)
-      };
       const s = {
         x: scale.start.x + (Math.abs(scale.start.x - scale.end.x) * t),
         y: scale.start.y + (Math.abs(scale.start.y - scale.end.y) * t)
@@ -51,7 +39,7 @@
         x: Math.abs((position.end.x - position.start.x) * (1 - t)) / s.x,
         y: Math.abs((position.end.y - position.start.y) * (1 - t)) / s.y
       };
-      return renderTransformStyles(s, p, o);
+      return renderTransformStyles(s, p);
     };
     return { duration, css };
   }
@@ -88,13 +76,14 @@
   <div
     style="{ overlayStyle }; background: { background }"
     class="overlay"
-    transition:swatchScale|local="{transitionSwatchScale}"
+    in:swatchScale|local="{{ ...transitionSwatchScale, duration: 150 }}"
+    out:swatchScale|local="{{ ...transitionSwatchScale, delay: 100, duration: 150 }}"
   >
   </div>
   <div
     class="modal"
-    in:fly|local="{{delay: 100, duration: 200, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut}}"
-    out:fly|local="{{delay: 0, duration: 100, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut}}"
+    in:fly|local="{{ delay: 100, duration: 200, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    out:fly|local="{{ delay: 0, duration: 100, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
   >
     <slot></slot>
   </div>
