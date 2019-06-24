@@ -2,7 +2,7 @@
 import Swatches from './Swatches.svelte';
 import Header from './Header.svelte';
 import Picker from './Picker.svelte';
-import { picking } from './store.js';
+import { picking, swatchesDimensionsIsReady } from './store.js';
 let width = 0;
 let height = 0;
 </script>
@@ -20,7 +20,7 @@ let height = 0;
 <div class="app" bind:offsetWidth={width} bind:offsetHeight={height}>
   <Header />
   <Swatches />
-  {#if typeof $picking === 'number'}
+  {#if typeof $picking === 'number' && $swatchesDimensionsIsReady}
     <Picker width={width} height={height} />
   {/if}
 </div>

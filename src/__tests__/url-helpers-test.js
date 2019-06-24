@@ -2,14 +2,15 @@ import { parseURL, toString, renderHash } from '../url-helpers.js';
 
 describe('parseURL()', () => {
   const url =
-    'http://localhost:5000/#name=%22world%22&names=%5B%22White%22%2C%22Fuschia%22%5D&values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D';
+    'http://localhost:5000/#name=%22world%22&names=%5B%22White%22%2C%22Fuschia%22%5D&values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D&picking=0';
   it('should parse a url correctly.', () => {
     expect(parseURL(url)).toEqual({
       name: 'world',
       swatches: [
         { name: 'White', value: '#ffffff' },
         { name: 'Fuschia', value: '#ff00cc' }
-      ]
+      ],
+      picking: 0
     });
   });
   it('should be memoized.', () => {
@@ -23,12 +24,13 @@ describe('toString()', () => {
     swatches: [
       { name: 'White', value: '#ffffff' },
       { name: 'Fuschia', value: '#ff00cc' }
-    ]
+    ],
+    picking: 0
   };
   it('should return the correct string.', () => {
     const string = toString(state);
     expect(string).toBe(
-      'name=%22world%22&names=%5B%22White%22%2C%22Fuschia%22%5D&values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D'
+      'name=%22world%22&names=%5B%22White%22%2C%22Fuschia%22%5D&values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D&picking=0'
     );
   });
   it('should be memoized.', () => {
@@ -40,7 +42,8 @@ describe('toString()', () => {
     expect(
       toString({
         name: 'Alright',
-        swatches: []
+        swatches: [],
+        picking: null
       })
     ).toEqual('name=%22Alright%22&names=%5B%5D&values=%5B%5D');
   });
@@ -52,7 +55,8 @@ describe('renderHash()', () => {
     swatches: [
       { name: 'White', value: '#ffffff' },
       { name: 'Fuschia', value: '#ff00cc' }
-    ]
+    ],
+    picking: null
   };
   it('should return the correct string.', () => {
     const string = renderHash(state);

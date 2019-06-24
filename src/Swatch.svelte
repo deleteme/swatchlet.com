@@ -1,10 +1,11 @@
 <script>
+  import { onMount, onDestroy } from 'svelte';
   import { renderHash } from './url-helpers.js';
   import { isMobile } from './breakpoint-store.js';
   import ButtonLink from './ButtonLink.svelte';
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
-  import { pick, swatches, name, hoveringSwatchDimensions, picking } from './store.js';
+  import { pick, swatches, name, picking, swatchesDimensions } from './store.js';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   export let i;
   export let value;
@@ -32,9 +33,7 @@
 
   let element;
 
-  const handleMouseenter = () => {
-    if ($picking) return;
-    isHovering = true;
+  const measure = () => {
     let { offsetWidth, offsetHeight, offsetLeft, offsetTop } = element;
     let parentElement = element.parentElement;
     while (parentElement) {
@@ -42,18 +41,22 @@
       offsetTop += parentElement.offsetTop;
       parentElement = parentElement.parentElement;
     }
-    $hoveringSwatchDimensions = {
-      offsetWidth, offsetHeight, offsetLeft, offsetTop
-    };
-    //console.log('assigned new hovering swatch dimensions', $hoveringSwatchDimensions);
+    return { offsetWidth, offsetHeight, offsetLeft, offsetTop };
   };
-  const handleMouseleave = () => {
-    if ($picking) return;
-    isHovering = false;
-    $hoveringSwatchDimensions = null;
-    //console.log('reset hovering swatch dimensions', $hoveringSwatchDimensions);
-  };
+
   const isAnchor = e => e.target.tagName === 'A';
+  const measureDimensions = () => {
+    $swatchesDimensions = {
+      ...$swatchesDimensions,
+      [i]: measure()
+    };
+  };
+  const handleWindowResize = () => { measureDimensions(); };
+  onMount(measureDimensions);
+  onDestroy(() => {
+    $swatchesDimensions = { ...$swatchesDimensions, [i]: null }
+  });
+
 </script>
 
 <style>
@@ -107,12 +110,11 @@
 }
 </style>
 
+<window on:resize={handleWindowResize} />
 <div
   class="swatch" class:swatch-is-hovering={isHovering}
   style='{outerBackgroundColor}; color: {contrastingColor};'
   on:click={(e) => { if (!isAnchor(e)) { pick(i) }}}
-  on:mouseenter={handleMouseenter}
-  on:mouseleave={handleMouseleave}
   bind:this={element}
 >
   <div

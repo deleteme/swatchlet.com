@@ -4,7 +4,7 @@
   import Button from './Button.svelte';
   import ButtonLink from './ButtonLink.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
-  import { name, picking, swatches, cancelPicking, pickingSwatch, hoveringSwatchDimensions } from './store.js';
+  import { name, picking, swatches, cancelPicking, pickingSwatch, swatchesDimensions } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
@@ -18,7 +18,7 @@
   $: background = previousBackgroundColor;
   $: document.documentElement.style.background = backgroundColor || previousBackgroundColor;
   $: contrastingColor = getHighContrastColorFromHex(backgroundColor || previousBackgroundColor);
-  $: originElementDimensions = $hoveringSwatchDimensions;
+  $: originElementDimensions = $swatchesDimensions[$picking]
   $: previousOriginElementDimensions = originElementDimensions || previousOriginElementDimensions;
 
   export let width = 0;
@@ -47,7 +47,6 @@
     unsub();
   });
   const handleRemoveButton = e => {
-    console.log('handleRemoveButton');
     e.preventDefault();
     const href = e.target.href;
     cancelPicking();
@@ -105,7 +104,13 @@ input:hover, input:focus {
 }
 </style>
 
-<Modal targetWidth={width} targetHeight={height} originElementDimensions={previousOriginElementDimensions} background={background}>
+
+<Modal
+  targetWidth={width}
+  targetHeight={height}
+  originElementDimensions={previousOriginElementDimensions}
+  background={background}
+>
   <div
     class="picker"
     class:tracking={$tracking}

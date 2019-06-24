@@ -12,7 +12,8 @@ export const parseURL = memoize(function _parseURL(url) {
   const get = key => JSON.parse(p.get(key));
   return {
     name: get('name'),
-    swatches: namesAndValuesToSwatches(get('names'), get('values'))
+    swatches: namesAndValuesToSwatches(get('names'), get('values')),
+    picking: get('picking')
   };
 });
 
@@ -45,7 +46,7 @@ const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
 export function toString(state) {
   const p = new URLSearchParams();
   Object.entries(state).forEach(([key, value]) => {
-    if (key === 'picking') {
+    if (key === 'picking' && value === null) {
       // nope
     } else if (key === 'swatches') {
       const swatches = value;

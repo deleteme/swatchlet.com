@@ -10,6 +10,7 @@
   export let originElementDimensions;
   export let background = '';
   let dimensions = originElementDimensions;
+
   $: transitionSwatchScale = {
       position: {
         start: { x: dimensions.offsetLeft, y: dimensions.offsetTop },
@@ -22,12 +23,14 @@
         },
         end: { x: 1, y: 1 },
       }}
+
   function renderTransformStyles (s, p) {
     const styles = `
       transform: scale(${s.x}, ${s.y}) translate(${p.x}px, ${p.y}px);
       `.trim();
     return styles;
   }
+
   function swatchScale(node, { duration, scale, position }) {
     const css = t => {
       t = easing.cubicOut(t);
@@ -45,10 +48,9 @@
   }
 
   $: overlayStyle = [
-      `left: 0px`,
-      `top: 0px`,
       `width:  ${targetWidth}px`,
       `height: ${targetHeight}px`,
+      `background: ${background}`
     ].join('; ')
 </script>
 <style>
@@ -59,6 +61,8 @@
   z-index: 1;
 }
 .overlay {
+  left: 0;
+  top: 0;
   position: absolute;
   transform-origin: 0px 0px;
   z-index: 1;
@@ -74,7 +78,7 @@
 <svelte:window on:keyup={handleKeyUp}></svelte:window>
 <div class="overlay-overflow">
   <div
-    style="{ overlayStyle }; background: { background }"
+    style="{ overlayStyle }"
     class="overlay"
     in:swatchScale|local="{{ ...transitionSwatchScale, duration: 150 }}"
     out:swatchScale|local="{{ ...transitionSwatchScale, delay: 100, duration: 150 }}"
