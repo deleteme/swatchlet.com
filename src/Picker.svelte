@@ -51,7 +51,7 @@
     const href = e.target.href;
     cancelPicking();
     // long enough for the exit animation
-    delay(251).then(() => {
+    delay(351).then(() => {
       location.href = href;
     });
   };

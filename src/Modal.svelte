@@ -80,14 +80,14 @@
   <div
     style="{ overlayStyle }"
     class="overlay"
-    in:swatchScale|local="{{ ...transitionSwatchScale, duration: 150 }}"
-    out:swatchScale|local="{{ ...transitionSwatchScale, delay: 100, duration: 150 }}"
+    in:swatchScale|local="{{ ...transitionSwatchScale, duration: 200 }}"
+    out:swatchScale|local="{{ ...transitionSwatchScale, delay: 150, duration: 200 }}"
   >
   </div>
   <div
     class="modal"
-    in:fly|local="{{ delay: 100, duration: 200, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
-    out:fly|local="{{ delay: 0, duration: 100, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    in:fly|local="{{ delay: 200, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    out:fly|local="{{ delay: 0, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
   >
     <slot></slot>
   </div>
