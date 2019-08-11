@@ -108,7 +108,7 @@ input:hover, input:focus {
 <Modal
   targetWidth={width}
   targetHeight={height}
-  originElementDimensions={previousOriginElementDimensions}
+  dimensions={previousOriginElementDimensions}
   background={background}
 >
   <div

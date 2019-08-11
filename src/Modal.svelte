@@ -7,22 +7,22 @@
   }
   export let targetHeight = 0;
   export let targetWidth = 0;
-  export let originElementDimensions;
   export let background = '';
-  let dimensions = originElementDimensions;
+  export let dimensions;
+  $: cachedDimensions = dimensions ? dimensions : cachedDimensions;
 
-  $: transitionSwatchScale = {
+  $: transitionSwatchScale = cachedDimensions ? {
       position: {
-        start: { x: dimensions.offsetLeft, y: dimensions.offsetTop },
+        start: { x: cachedDimensions.offsetLeft, y: cachedDimensions.offsetTop },
         end: { x: 0, y: 0 },
       },
       scale: {
         start: {
-          x: dimensions.offsetWidth / targetWidth,
-          y: dimensions.offsetHeight / targetHeight
+          x: cachedDimensions.offsetWidth / targetWidth,
+          y: cachedDimensions.offsetHeight / targetHeight
         },
         end: { x: 1, y: 1 },
-      }}
+      }} : null;
 
   function renderTransformStyles (s, p) {
     const styles = `
@@ -32,6 +32,7 @@
   }
 
   function swatchScale(node, { duration, scale, position }) {
+    console.log({ duration, scale, position });
     const css = t => {
       t = easing.cubicOut(t);
       const s = {
@@ -77,17 +78,19 @@
 </style>
 <svelte:window on:keyup={handleKeyUp}></svelte:window>
 <div class="overlay-overflow">
+  {#if transitionSwatchScale}
   <div
     style="{ overlayStyle }"
     class="overlay"
-    in:swatchScale|local="{{ ...transitionSwatchScale, duration: 200 }}"
-    out:swatchScale|local="{{ ...transitionSwatchScale, delay: 150, duration: 200 }}"
+    in:swatchScale="{{ ...transitionSwatchScale, duration: 200 }}"
+    out:swatchScale="{{ ...transitionSwatchScale, delay: 150, duration: 200 }}"
   >
   </div>
+  {/if}
   <div
     class="modal"
-    in:fly|local="{{ delay: 200, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
-    out:fly|local="{{ delay: 0, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    in:fly="{{ delay: 200, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    out:fly="{{ delay: 0, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
   >
     <slot></slot>
   </div>

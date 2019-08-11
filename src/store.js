@@ -52,6 +52,10 @@ export const pickingSwatchRgb = derived(pickingSwatch, swatch => {
 
 export const swatchesDimensions = writable({});
 
+swatchesDimensions.subscribe(v => {
+  console.log('swatchesDimensions', v);
+});
+
 export const swatchesDimensionsIsReady = derived(swatchesDimensions, d => {
   return (
     Object.values(d).filter(dimensions => {
