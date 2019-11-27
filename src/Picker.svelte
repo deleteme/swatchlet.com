@@ -24,6 +24,10 @@
   export let height = 0;
   let value = $pickingSwatch.value;
   let isOpen = true;
+  const timeScale = 1;
+  const duration1 = 200 * timeScale;
+  const duration2 = 150 * timeScale;
+  const effectOverlap = 50 * timeScale;
 
   $: {
     if (isValidHex(value) && $pickingSwatch) {
@@ -55,7 +59,7 @@
       setTimeout(() => {
         console.log('resolving');
         resolve()
-    }, 3501);
+    }, duration1 + duration2 - effectOverlap + 1);
     });
   };
 
@@ -136,6 +140,9 @@ input:hover, input:focus {
   targetHeight={height}
   dimensions={previousOriginElementDimensions}
   background={background}
+  duration1={duration1}
+  duration2={duration2}
+  effectOverlap={effectOverlap}
 >
   <div
     class="picker"

@@ -9,7 +9,9 @@
   export let targetWidth = 0;
   export let background = '';
   export let dimensions;
-  export let forceHidden = false;
+  export let duration1 = 2000;
+  export let duration2 = 1500;
+  export let effectOverlap = 0;
   //$: cachedDimensions = dimensions ? dimensions : cachedDimensions;
 
   $: transitionSwatchScale = dimensions ? {
@@ -46,7 +48,7 @@
         x: Math.abs((position.end.x - position.start.x) * (1 - t)) / s.x,
         y: Math.abs((position.end.y - position.start.y) * (1 - t)) / s.y
       };
-      return renderTransformStyles(s, p);
+      return `${renderTransformStyles(s, p)};`;
     };
     return { duration, css };
   }
@@ -76,10 +78,6 @@
   z-index: 1;
 }
 
-.force-hidden {
-  display: none;
-}
-
 .overlay-overflow {
   height: 100%;
   overflow: hidden;
@@ -95,18 +93,18 @@
     in:swatchScale="{{ ...transitionSwatchScale, duration: 2000 }}"
     out:swatchScaleOut|local="{{ ...transitionSwatchScale, delay: 1500, duration: 2000 }}"
 -->
-<div class="overlay-overflow {forceHidden ? 'force-hidden' : ''}">
+<div class="overlay-overflow">
   <div
     style="{ overlayStyle }"
     class="overlay"
-    in:swatchScale="{{ ...transitionSwatchScale, duration: 2000 }}"
-    out:swatchScaleOut="{{ ...transitionSwatchScale, delay: 1500, duration: 2000 }}"
+    in:swatchScale="{{ ...transitionSwatchScale, duration: duration1 }}"
+    out:swatchScaleOut="{{ ...transitionSwatchScale, delay: duration2 - effectOverlap, duration: duration1 }}"
   >
   </div>
   <div
     class="modal"
-    in:fly="{{ delay: 2000, duration: 1500, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
-    out:fly="{{ delay: 0, duration: 1500, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    in:fly="{{ delay: duration1 - effectOverlap, duration: duration2, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    out:fly="{{ delay: 0, duration: duration2, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
   >
     <slot></slot>
   </div>
