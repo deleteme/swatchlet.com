@@ -7,12 +7,10 @@ import rgbStringToComponents from './lib/rgb-string-to-components.js';
 const initialStateFromURL = parseURL(location.href) || {};
 
 const defaultState = {
-  name: 'world',
   swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
   picking: null
 };
 
-export const name = writable(initialStateFromURL.name || defaultState.name);
 export const swatches = writable(
   initialStateFromURL.swatches || defaultState.swatches
 );

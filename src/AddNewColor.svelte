@@ -1,10 +1,9 @@
 <script>
   import { renderHash } from './url-helpers.js';
-  import {name, swatches} from './store.js';
+  import {swatches} from './store.js';
   import ButtonLink from './ButtonLink.svelte';
   $: addHref = renderHash({
-      name: $name,
-      swatches: [...$swatches, { name: 'White', value: '#ffffff' }]
+      swatches: [...$swatches, { value: '#ffffff' }]
     })
 </script>
 

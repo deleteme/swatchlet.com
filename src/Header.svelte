@@ -1,6 +1,5 @@
 <script>
 import AddNewColor from './AddNewColor.svelte';
-import { name } from './store.js';
 </script>
 
 <style>
@@ -19,26 +18,20 @@ header {
   z-index: 1;
 }
 
-input, label {
-  background: none;
-  border: 0;
+h1 {
   color: white;
   display: inline;
+  font-size: 14px;
+  margin: 0;
+  padding: 0;
 }
 
-input {
-  text-decoration: underline;
-}
-input:focus {
-  background: black;
-}
 </style>
 
 <header>
-  <div>
-    <label for="name">Name</label>
-    <input type="text" bind:value={$name} id="name" />
-  </div>
+  <h1>
+    swatchlet.com: share colors easily.
+  </h1>
   <div>
     <AddNewColor />
   </div>
