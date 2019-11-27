@@ -5,7 +5,7 @@
   import ButtonLink from './ButtonLink.svelte';
   import Button from './Button.svelte';
   import ActionBar from './ActionBar.svelte';
-  import { pick, swatches, name, picking, swatchesDimensions } from './store.js';
+  import { pick, swatches, picking, swatchesDimensions } from './store.js';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   export let i;
   export let value;
@@ -20,7 +20,6 @@
     }
   };
   $: removeHref = renderHash({
-    name: $name,
     swatches: $swatches.filter((s, j) => {
       return i !== j;
     })

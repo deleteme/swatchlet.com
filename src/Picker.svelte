@@ -4,7 +4,7 @@
   import Button from './Button.svelte';
   import ButtonLink from './ButtonLink.svelte';
   import PickerCanvas from './PickerCanvas.svelte';
-  import { name, picking, swatches, cancelPicking, pickingSwatch, swatchesDimensions } from './store.js';
+  import { picking, swatches, cancelPicking, pickingSwatch, swatchesDimensions } from './store.js';
   import { tracking } from './picker-canvas-store.js';
   import PinnedRadios from './PinnedRadios.svelte';
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
@@ -36,7 +36,6 @@
   }
 
   $: removeHref = renderHash({
-    name: $name,
     swatches: $swatches.filter((s, j) => {
       return $picking !== j;
     })

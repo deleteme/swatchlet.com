@@ -11,7 +11,6 @@ export const parseURL = memoize(function _parseURL(url) {
   const p = new URLSearchParams(paramString);
   const get = key => JSON.parse(p.get(key));
   return {
-    name: get('name'),
     swatches: valuesToSwatches(get('values')),
     picking: get('picking')
   };
