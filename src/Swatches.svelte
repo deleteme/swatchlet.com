@@ -21,6 +21,6 @@
 
 <div class='swatches'>
   {#each $swatches as swatch, i}
-  <Swatch name={swatch.name} value={swatch.value} i={i} />
+  <Swatch value={swatch.value} i={i} />
   {/each}
 </div>

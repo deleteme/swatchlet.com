@@ -12,7 +12,7 @@ export const parseURL = memoize(function _parseURL(url) {
   const get = key => JSON.parse(p.get(key));
   return {
     name: get('name'),
-    swatches: namesAndValuesToSwatches(get('names'), get('values')),
+    swatches: valuesToSwatches(get('values')),
     picking: get('picking')
   };
 });
@@ -22,25 +22,22 @@ export const parseURL = memoize(function _parseURL(url) {
 // memoization because it's not a deep object.
 //
 // Swatches shape:
-// [{ name: 'some name', value: '#123bbd' }]
+// [{ value: '#123bbd' }]
 //
 // Intermediate shape for the url:
-// names: ['some name']
 // values: ['#123bbd']
 //
-const namesAndValuesToSwatches = memoize(function _namesAndValuesToSwatches(
-  names,
+const valuesToSwatches = memoize(function _valuesToSwatches(
   values
 ) {
-  return names.map((name, i) => ({ name, value: values[i] }));
+  return values.map((value) => ({ value }));
 });
 
-const swatchesToNamesAndValues = memoize(function _swatchesToNamesAndValues(
+const swatchesToValues = memoize(function _swatchesToValues(
   swatches
 ) {
-  const names = swatches.map(swatch => swatch.name);
   const values = swatches.map(swatch => swatch.value);
-  return { names, values };
+  return values;
 });
 
 export function toString(state) {
@@ -50,8 +47,7 @@ export function toString(state) {
       // nope
     } else if (key === 'swatches') {
       const swatches = value;
-      const { names, values } = swatchesToNamesAndValues(swatches);
-      p.append('names', JSON.stringify(names));
+      const values = swatchesToValues(swatches);
       p.append('values', JSON.stringify(values));
     } else {
       p.append(key, JSON.stringify(value));

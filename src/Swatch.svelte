@@ -9,8 +9,6 @@
   import { getHighContrastColorFromHex } from './lib/get-high-contrast-color.js';
   export let i;
   export let value;
-  let swatchName;
-  export { swatchName as name };
   let isHovering = false;
   const noop = () => {};
   const safe = (fn, fallback) => {
