@@ -8,7 +8,10 @@ const initialStateFromURL = parseURL(location.href) || {};
 
 const defaultState = {
   name: 'world',
-  swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
+  swatches: [
+    { value: '#ffffff' },
+    { value: '#ff00cc' }
+  ],
   picking: null
 };
 
@@ -24,13 +27,8 @@ export const pick = index => {
 };
 
 export const cancelPicking = () => {
-  console.log('cancel picking');
   picking.set(defaultState.picking);
 };
-
-picking.subscribe(value => {
-  console.log('picking changed:', value);
-});
 
 export const pickingSwatch = derived(
   [picking, swatches],

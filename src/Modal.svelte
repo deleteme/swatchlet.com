@@ -1,10 +1,6 @@
 <script>
   import { fly, fade } from 'svelte/transition';
   import * as easing from 'svelte/easing';
-  import { cancelPicking } from './store.js';
-  const handleKeyUp = e => {
-    if (e.code === 'Escape') cancelPicking();
-  }
   export let targetHeight = 0;
   export let targetWidth = 0;
   export let background = '';
@@ -12,6 +8,11 @@
   export let duration1 = 2000;
   export let duration2 = 1500;
   export let effectOverlap = 0;
+  export let handleEscapeKey;
+
+  const handleKeyUp = e => {
+    if (e.code === 'Escape') handleEscapeKey();
+  }
   //$: cachedDimensions = dimensions ? dimensions : cachedDimensions;
 
   $: transitionSwatchScale = dimensions ? {

@@ -1,5 +1,5 @@
 <script>
-  import { onMount, onDestroy } from 'svelte';
+  import { onDestroy } from 'svelte';
   import ActionBar from './ActionBar.svelte';
   import Button from './Button.svelte';
   import ButtonLink from './ButtonLink.svelte';
@@ -48,19 +48,16 @@
     }
   });
   onDestroy(() => {
-    console.log('picker unmounted');
     unsub();
   });
 
   const close = () => {
-    console.log('close');
     isOpen = false;
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('resolving');
-        resolve()
-    }, duration1 + duration2 - effectOverlap + 1);
-    });
+    return delay(duration1 + duration2 - effectOverlap + 1);
+  };
+
+  const handleEscapeKey = () => {
+    close().then(cancelPicking);
   };
 
   const handleRemoveButton = e => {
@@ -73,14 +70,8 @@
   };
   const handleCloseButton = e => {
     e.preventDefault();
-    close().then(() => {
-      console.log('about to cancel picking');
-      cancelPicking();
-    });
+    close().then(cancelPicking);
   };
-  onMount(() => {
-    console.log('picker mounted');
-  });
 </script>
 
 <style>
@@ -143,6 +134,7 @@ input:hover, input:focus {
   duration1={duration1}
   duration2={duration2}
   effectOverlap={effectOverlap}
+  handleEscapeKey={handleEscapeKey}
 >
   <div
     class="picker"
