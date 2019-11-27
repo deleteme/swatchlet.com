@@ -31,7 +31,7 @@ export const cancelPicking = () => {
   picking.set(defaultState.picking);
 };
 
-picking.subscribe((value) => {
+picking.subscribe(value => {
   console.log('picking changed:', value);
 });
 
