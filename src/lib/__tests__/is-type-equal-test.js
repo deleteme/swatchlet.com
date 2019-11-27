@@ -8,7 +8,12 @@ describe('isTypeEqual()', () => {
     expect(isTypeEqual({}, {})).toBe(true);
     expect(isTypeEqual([], [])).toBe(true);
     expect(isTypeEqual('', '')).toBe(true);
-    expect(isTypeEqual(() => {}, () => {})).toBe(true);
+    expect(
+      isTypeEqual(
+        () => {},
+        () => {}
+      )
+    ).toBe(true);
     expect(isTypeEqual(true, true)).toBe(true);
   });
   it('should return false when called with different types.', () => {

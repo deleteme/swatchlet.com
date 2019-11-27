@@ -16,7 +16,6 @@
   $: backgroundColor = $swatches[$picking] && $swatches[$picking].value;
   $: previousBackgroundColor = $swatches[$picking] ? $swatches[$picking].value : previousBackgroundColor;
   $: background = previousBackgroundColor;
-  $: document.documentElement.style.background = backgroundColor || previousBackgroundColor;
   $: contrastingColor = getHighContrastColorFromHex(backgroundColor || previousBackgroundColor);
   $: originElementDimensions = $swatchesDimensions[$picking]
   $: previousOriginElementDimensions = originElementDimensions || previousOriginElementDimensions;
@@ -24,6 +23,7 @@
   export let width = 0;
   export let height = 0;
   let value = $pickingSwatch.value;
+  let isOpen = true;
 
   $: {
     if (isValidHex(value) && $pickingSwatch) {
@@ -44,17 +44,39 @@
     }
   });
   onDestroy(() => {
+    console.log('picker unmounted');
     unsub();
   });
+
+  const close = () => {
+    console.log('close');
+    isOpen = false;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log('resolving');
+        resolve()
+    }, 3501);
+    });
+  };
+
   const handleRemoveButton = e => {
     e.preventDefault();
     const href = e.target.href;
-    cancelPicking();
-    // long enough for the exit animation
-    delay(351).then(() => {
+    close().then(() => {
+      cancelPicking();
       location.href = href;
     });
   };
+  const handleCloseButton = e => {
+    e.preventDefault();
+    close().then(() => {
+      console.log('about to cancel picking');
+      cancelPicking();
+    });
+  };
+  onMount(() => {
+    console.log('picker mounted');
+  });
 </script>
 
 <style>
@@ -105,6 +127,10 @@ input:hover, input:focus {
 </style>
 
 
+<svelte:head>
+{@html `<style>html { background: ${backgroundColor || previousBackgroundColor} }</style>`}
+</svelte:head>
+{#if isOpen }
 <Modal
   targetWidth={width}
   targetHeight={height}
@@ -125,9 +151,10 @@ input:hover, input:focus {
       <ButtonLink href={removeHref} class='swatch-action' on:click={handleRemoveButton}>
         Remove
       </ButtonLink>
-      <Button on:click={cancelPicking}>Close</Button>
+      <Button on:click={handleCloseButton}>Close</Button>
     </ActionBar>
     <PinnedRadios />
     <PickerCanvas />
   </div>
 </Modal>
+{/if}

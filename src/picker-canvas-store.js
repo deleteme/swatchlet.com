@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store.js';
+import { writable, derived } from 'svelte/store';
 
 export const COLOR_MODEL_RGB = 'RGB';
 const COLOR_MODEL_HSL = 'HSL';

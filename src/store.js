@@ -1,4 +1,4 @@
-import { writable, derived } from 'svelte/store.js';
+import { writable, derived } from 'svelte/store';
 
 import { parseURL } from './url-helpers.js';
 import hexToRgb from './lib/hex-to-rgb.js';
@@ -27,8 +27,13 @@ export const pick = index => {
 };
 
 export const cancelPicking = () => {
+  console.log('cancel picking');
   picking.set(defaultState.picking);
 };
+
+picking.subscribe((value) => {
+  console.log('picking changed:', value);
+});
 
 export const pickingSwatch = derived(
   [picking, swatches],

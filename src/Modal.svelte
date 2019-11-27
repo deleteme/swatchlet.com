@@ -1,5 +1,5 @@
 <script>
-  import { fly } from 'svelte/transition';
+  import { fly, fade } from 'svelte/transition';
   import * as easing from 'svelte/easing';
   import { cancelPicking } from './store.js';
   const handleKeyUp = e => {
@@ -9,17 +9,18 @@
   export let targetWidth = 0;
   export let background = '';
   export let dimensions;
-  $: cachedDimensions = dimensions ? dimensions : cachedDimensions;
+  export let forceHidden = false;
+  //$: cachedDimensions = dimensions ? dimensions : cachedDimensions;
 
-  $: transitionSwatchScale = cachedDimensions ? {
+  $: transitionSwatchScale = dimensions ? {
       position: {
-        start: { x: cachedDimensions.offsetLeft, y: cachedDimensions.offsetTop },
+        start: { x: dimensions.offsetLeft, y: dimensions.offsetTop },
         end: { x: 0, y: 0 },
       },
       scale: {
         start: {
-          x: cachedDimensions.offsetWidth / targetWidth,
-          y: cachedDimensions.offsetHeight / targetHeight
+          x: dimensions.offsetWidth / targetWidth,
+          y: dimensions.offsetHeight / targetHeight
         },
         end: { x: 1, y: 1 },
       }} : null;
@@ -31,9 +32,11 @@
     return styles;
   }
 
-  function swatchScale(node, { duration, scale, position }) {
-    console.log({ duration, scale, position });
+  function swatchScale(node, { duration, scale, position, reverse }) {
+    console.log('swatchScale called', { duration, scale, position, reverse });
     const css = t => {
+      console.log('t', t);
+      //if (reverse) t = 100 - t;
       t = easing.cubicOut(t);
       const s = {
         x: scale.start.x + (Math.abs(scale.start.x - scale.end.x) * t),
@@ -46,6 +49,10 @@
       return renderTransformStyles(s, p);
     };
     return { duration, css };
+  }
+  function swatchScaleOut(node, options) {
+    console.log('swatch scale out called');
+    return swatchScale(node, { ...options, reverse: true });
   }
 
   $: overlayStyle = [
@@ -68,6 +75,11 @@
   transform-origin: 0px 0px;
   z-index: 1;
 }
+
+.force-hidden {
+  display: none;
+}
+
 .overlay-overflow {
   height: 100%;
   overflow: hidden;
@@ -77,20 +89,24 @@
 }
 </style>
 <svelte:window on:keyup={handleKeyUp}></svelte:window>
-<div class="overlay-overflow">
-  {#if transitionSwatchScale}
+<!--
+    transition:fade
+    transition:swatchScale="{{ ...transitionSwatchScale, duration: 2000 }}"
+    in:swatchScale="{{ ...transitionSwatchScale, duration: 2000 }}"
+    out:swatchScaleOut|local="{{ ...transitionSwatchScale, delay: 1500, duration: 2000 }}"
+-->
+<div class="overlay-overflow {forceHidden ? 'force-hidden' : ''}">
   <div
     style="{ overlayStyle }"
     class="overlay"
-    in:swatchScale="{{ ...transitionSwatchScale, duration: 200 }}"
-    out:swatchScale="{{ ...transitionSwatchScale, delay: 150, duration: 200 }}"
+    in:swatchScale="{{ ...transitionSwatchScale, duration: 2000 }}"
+    out:swatchScaleOut="{{ ...transitionSwatchScale, delay: 1500, duration: 2000 }}"
   >
   </div>
-  {/if}
   <div
     class="modal"
-    in:fly="{{ delay: 200, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
-    out:fly="{{ delay: 0, duration: 150, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    in:fly="{{ delay: 2000, duration: 1500, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
+    out:fly="{{ delay: 0, duration: 1500, x: targetWidth / 10, y: 0, opacity: 0, easing: easing.quintOut }}"
   >
     <slot></slot>
   </div>
