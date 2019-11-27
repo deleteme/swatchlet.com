@@ -27,15 +27,11 @@ export const parseURL = memoize(function _parseURL(url) {
 // Intermediate shape for the url:
 // values: ['#123bbd']
 //
-const valuesToSwatches = memoize(function _valuesToSwatches(
-  values
-) {
-  return values.map((value) => ({ value }));
+const valuesToSwatches = memoize(function _valuesToSwatches(values) {
+  return values.map(value => ({ value }));
 });
 
-const swatchesToValues = memoize(function _swatchesToValues(
-  swatches
-) {
+const swatchesToValues = memoize(function _swatchesToValues(swatches) {
   const values = swatches.map(swatch => swatch.value);
   return values;
 });

@@ -6,10 +6,7 @@ describe('parseURL()', () => {
   it('should parse a url correctly.', () => {
     expect(parseURL(url)).toEqual({
       name: 'world',
-      swatches: [
-        { value: '#ffffff' },
-        { value: '#ff00cc' }
-      ],
+      swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
       picking: 0
     });
   });
@@ -21,10 +18,7 @@ describe('parseURL()', () => {
 describe('toString()', () => {
   const state = {
     name: 'world',
-    swatches: [
-      { value: '#ffffff' },
-      { value: '#ff00cc' }
-    ],
+    swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
     picking: 0
   };
   it('should return the correct string.', () => {
@@ -52,10 +46,7 @@ describe('toString()', () => {
 describe('renderHash()', () => {
   const state = {
     name: 'world',
-    swatches: [
-      { value: '#ffffff' },
-      { value: '#ff00cc' }
-    ],
+    swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
     picking: null
   };
   it('should return the correct string.', () => {

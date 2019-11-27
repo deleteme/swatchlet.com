@@ -8,10 +8,7 @@ const initialStateFromURL = parseURL(location.href) || {};
 
 const defaultState = {
   name: 'world',
-  swatches: [
-    { value: '#ffffff' },
-    { value: '#ff00cc' }
-  ],
+  swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
   picking: null
 };
 
