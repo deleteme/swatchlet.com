@@ -21,10 +21,8 @@
     "prettier": "prettier --write --single-quote \"./*.js\" \"src/**/*.js\"",
     "test": "jest",
     "build": "rollup -c",
-    "autobuild": "rollup -c -w",
-    "dev": "run-p start:dev autobuild",
-    "start": "sirv public",
-    "start:dev": "sirv public --dev"
+    "dev": "rollup -c -w",
+    "start": "sirv public"
   },
   "dependencies": {
     "lodash.throttle": "^4.1.1"
