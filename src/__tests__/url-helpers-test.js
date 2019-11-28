@@ -11,6 +11,12 @@ describe('parseURL()', () => {
   it('should be memoized.', () => {
     expect(parseURL(url)).toBe(parseURL(url));
   });
+  it('should handle uppercase hex values', () => {
+    expect(parseURL('http://localhost:5000/#FFFFFF,FF00CC,p0')).toEqual({
+      swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
+      picking: 0
+    });
+  });
 });
 
 describe('toString()', () => {
@@ -20,7 +26,7 @@ describe('toString()', () => {
   };
   it('should return the correct string.', () => {
     const string = toString(state);
-    expect(string).toBe('ffffff,ff00cc,p0');
+    expect(string).toBe('FFFFFF,FF00CC,p0');
   });
   it('should be memoized.', () => {
     const first = toString(state);
@@ -44,7 +50,7 @@ describe('renderHash()', () => {
   };
   it('should return the correct string.', () => {
     const string = renderHash(state);
-    expect(string).toBe('#ffffff,ff00cc');
+    expect(string).toBe('#FFFFFF,FF00CC');
   });
   it('should be memoized.', () => {
     const first = renderHash(state);

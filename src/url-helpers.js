@@ -19,7 +19,8 @@ export const parseURL = memoize(function _parseURL(url) {
     .split(',')
     .filter(function rejectPickingValue(value) {
       return !value.startsWith('p');
-    });
+    })
+    .map(value => value.toLowerCase());
   return {
     swatches: valuesToSwatches(parts),
     picking: getPickingValue(paramString)
@@ -32,7 +33,9 @@ const valuesToSwatches = memoize(function _valuesToSwatches(values) {
 
 export function toString(state) {
   const { picking, swatches } = state;
-  const parts = swatches.map(({ value }) => value.replace('#', ''));
+  const parts = swatches.map(({ value }) =>
+    value.replace('#', '').toUpperCase()
+  );
   if (picking !== null) {
     parts.push(`p${picking}`);
   }
