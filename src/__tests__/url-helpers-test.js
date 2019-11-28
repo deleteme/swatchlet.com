@@ -1,8 +1,7 @@
 import { parseURL, toString, renderHash } from '../url-helpers.js';
 
 describe('parseURL()', () => {
-  const url =
-    'http://localhost:5000/#values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D&picking=0';
+  const url = 'http://localhost:5000/#ffffff,ff00cc,p0';
   it('should parse a url correctly.', () => {
     expect(parseURL(url)).toEqual({
       swatches: [{ value: '#ffffff' }, { value: '#ff00cc' }],
@@ -21,9 +20,7 @@ describe('toString()', () => {
   };
   it('should return the correct string.', () => {
     const string = toString(state);
-    expect(string).toBe(
-      'values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D&picking=0'
-    );
+    expect(string).toBe('ffffff,ff00cc,p0');
   });
   it('should be memoized.', () => {
     const first = toString(state);
@@ -36,7 +33,7 @@ describe('toString()', () => {
         swatches: [],
         picking: null
       })
-    ).toEqual('values=%5B%5D');
+    ).toEqual('');
   });
 });
 
@@ -47,7 +44,7 @@ describe('renderHash()', () => {
   };
   it('should return the correct string.', () => {
     const string = renderHash(state);
-    expect(string).toBe('#values=%5B%22%23ffffff%22%2C%22%23ff00cc%22%5D');
+    expect(string).toBe('#ffffff,ff00cc');
   });
   it('should be memoized.', () => {
     const first = renderHash(state);

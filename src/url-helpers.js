@@ -2,17 +2,27 @@ import { memoize } from './memoize.js';
 
 const fragmentRegExp = /#(.+)$/;
 
+const getPickingValue = string => {
+  const match = string.match(/p(\d)+$/);
+  if (!match) return null;
+  const [_, digits] = match;
+  return digits.length > 0 ? Number(digits) : null;
+};
+
 export const parseURL = memoize(function _parseURL(url) {
   const match = url.match(fragmentRegExp);
   if (!match) return;
   const [_, paramString] = match;
   // bail early again
-  if (!paramString || !paramString.includes('=')) return;
-  const p = new URLSearchParams(paramString);
-  const get = key => JSON.parse(p.get(key));
+  if (!paramString || paramString.length === 0) return;
+  const parts = paramString
+    .split(',')
+    .filter(function rejectPickingValue(value) {
+      return !value.startsWith('p');
+    });
   return {
-    swatches: valuesToSwatches(get('values')),
-    picking: get('picking')
+    swatches: valuesToSwatches(parts),
+    picking: getPickingValue(paramString)
   };
 });
 
@@ -27,28 +37,16 @@ export const parseURL = memoize(function _parseURL(url) {
 // values: ['#123bbd']
 //
 const valuesToSwatches = memoize(function _valuesToSwatches(values) {
-  return values.map(value => ({ value }));
-});
-
-const swatchesToValues = memoize(function _swatchesToValues(swatches) {
-  const values = swatches.map(swatch => swatch.value);
-  return values;
+  return values.map(value => ({ value: `#${value}` }));
 });
 
 export function toString(state) {
-  const p = new URLSearchParams();
-  Object.entries(state).forEach(([key, value]) => {
-    if (key === 'picking' && value === null) {
-      // nope
-    } else if (key === 'swatches') {
-      const swatches = value;
-      const values = swatchesToValues(swatches);
-      p.append('values', JSON.stringify(values));
-    } else {
-      p.append(key, JSON.stringify(value));
-    }
-  });
-  return p.toString();
+  const { picking, swatches } = state;
+  const parts = swatches.map(({ value }) => value.replace('#', ''));
+  if (picking !== null) {
+    parts.push(`p${picking}`);
+  }
+  return parts.join(',');
 }
 
 export function renderHash(state) {
