@@ -26,16 +26,6 @@ export const parseURL = memoize(function _parseURL(url) {
   };
 });
 
-// This converts the swatches to an intermediate representation that is better
-// suited for use in the url. The intermediate shape works better with
-// memoization because it's not a deep object.
-//
-// Swatches shape:
-// [{ value: '#123bbd' }]
-//
-// Intermediate shape for the url:
-// values: ['#123bbd']
-//
 const valuesToSwatches = memoize(function _valuesToSwatches(values) {
   return values.map(value => ({ value: `#${value}` }));
 });
