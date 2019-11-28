@@ -1,6 +1,3 @@
-.DS_Store
-Thumbs.db
-public/javascripts/application.js
-public/images/*
-public/core
-public/tests
+node_modules
+public/bundle.*
+session.vim
