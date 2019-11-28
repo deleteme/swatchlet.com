@@ -22,7 +22,7 @@
     "test": "jest",
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public"
+    "start": "sirv docs"
   },
   "dependencies": {
     "lodash.throttle": "^4.1.1"
